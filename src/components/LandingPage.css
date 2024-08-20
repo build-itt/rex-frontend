@@ -1,0 +1,125 @@
+/* Full page background */
+.landing-container {
+    height: 100vh;
+    width: 100vw;
+    background-image: url('../assets/image.png'); /* Use your local image here */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Overlay effect to darken the image */
+  .landing-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    z-index: -1; /* Behind content */
+  }
+  
+  /* Centered text */
+  .text-container {
+    margin-bottom: 40px;
+  }
+  
+  /* Animated text */
+  .animated-text {
+    font-size: 4rem;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide the text overflow */
+    border-right: 2px solid white; /* Cursor effect */
+    animation: blinkCursor 0.75s step-end infinite;
+  }
+  
+  /* Blinking cursor animation */
+  @keyframes blinkCursor {
+    from {
+      border-right-color: white;
+    }
+    to {
+      border-right-color: transparent;
+    }
+  }
+  
+/* Button container remains the same */
+.button-container {
+    display: flex;
+    gap: 20px;
+  }
+  
+  /* Dark web style buttons */
+  .btn {
+    background-color: #1b1b1b; /* Deep dark background */
+    color: #f0f0f0; /* Light text for contrast */
+    border: 2px solid #ff007f; /* Neon pinkish border */
+    padding: 12px 30px;
+    font-size: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    border-radius: 50px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8), 0 0 20px rgba(255, 0, 127, 0.5); /* Neon glow */
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  /* Button hover effects - more glow */
+  .btn:hover {
+    transform: scale(1.1);
+    background-color: #2e2e2e; /* Slightly lighter on hover */
+    box-shadow: 0 0 15px rgba(255, 0, 127, 1), 0 0 30px rgba(255, 0, 127, 0.8); /* Stronger neon glow */
+  }
+  
+  /* Button specific styles - Sign In */
+  .btn-signup {
+    border-color: #00ff9f; /* Neon greenish border */
+    box-shadow: 0 0 10px rgba(0, 255, 159, 0.8), 0 0 20px rgba(0, 255, 159, 0.5); /* Neon green glow */
+  }
+  
+  .btn-signup:hover {
+    background-color: #2e2e2e;
+    box-shadow: 0 0 15px rgba(0, 255, 159, 1), 0 0 30px rgba(0, 255, 159, 0.8); /* Stronger green neon */
+  }
+  
+  /* Button specific styles - Sign Up */
+  .btn-signin {
+    border-color: #ff007f; /* Neon pink border */
+    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8), 0 0 20px rgba(255, 0, 127, 0.5); /* Neon pink glow */
+  }
+  
+  .btn-signin:hover {
+    background-color: #2e2e2e;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 1), 0 0 30px rgba(255, 0, 127, 0.8); /* Stronger pink neon */
+  }
+  
+/* Optional glitch effect for extra flair */
+.btn::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(45deg, transparent, rgba(255, 0, 127, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+  }
+  
+  .btn:hover::before {
+    opacity: 1;
+    filter: blur(5px);
+    transform: skew(20deg);
+  }

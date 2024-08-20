@@ -1,0 +1,157 @@
+/* General styles for the Sign-In Page */
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #111;
+  }
+  .button-container-login {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .form-container-signup {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 159, 1), 0 0 30px rgba(0, 255, 159, 0.8);
+    text-align: center;
+    width: 90%; /* Make the form container flexible */
+    max-width: 400px; /* Limit the maximum width for larger screens */
+  }
+  
+  .signin-title {
+    font-size: 2rem;
+    color: #ff007f;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
+    display: inline-block; /* Allows the cursor to appear directly after the text */
+    position: relative;
+  }
+  
+  /* Adding the blinking cursor */
+  .signin-title::after {
+    content: "."; /* This simulates the blinking cursor */
+    position: absolute;
+    right: -10px; /* Adjust the position as needed */
+    animation: blinkCursorsignin 0.75s step-end infinite;
+    color: white; /* Cursor color */
+  }
+  
+  @keyframes blinkCursorsignin {
+    50% {
+      opacity: 0; /* Make it disappear in the middle of the cycle */
+    }
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .neon-input {
+    width: 100%;
+    padding: 10px;
+    background-color: transparent;
+    border: 2px solid #ff007f;
+    color: white;
+    font-size: 1rem;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    outline: none;
+  }
+  .neon-input:focus {
+    border-color: #00ff9f;
+    box-shadow: 0 0 15px rgba(0, 255, 159, 1), 0 0 30px rgba(0, 255, 159, 0.8);
+  }
+  .neon-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .btn-submit {
+    background-color: transparent;
+    border: 2px solid #ff007f;
+    padding: 10px 20px;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  }
+  
+  .btn-submit:hover {
+    background-color: #ff007f;
+    box-shadow: 0 0 10px rgba(255, 0, 127, 1);
+  }
+  
+  .helper-links {
+    margin-top: 10px;
+  }
+  
+  .neon-link {
+    background: none;
+    border: none;
+    color: #ff007f;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 0, 127, 0.8);
+    margin-bottom: 10px;
+  }
+  
+  .neon-link:hover {
+    color: #00ff9f;
+    text-shadow: 0 0 10px rgba(0, 255, 159, 1);
+  }
+  
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .form-container-signup {
+      padding: 20px;
+      max-width: 100%;
+    }
+  
+    .signin-title {
+      font-size: 1.8rem;
+    }
+  
+    .btn-submit {
+      font-size: 1rem;
+      padding: 8px 16px;
+    }
+  
+    .neon-link {
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .form-container-signup {
+      padding: 15px;
+    }
+  
+    .signin-title {
+      font-size: 1.5rem;
+    }
+  
+    .neon-input {
+      font-size: 0.9rem;
+      width: calc(100% - 20px);
+      padding: 8px;
+    }
+  
+    .btn-submit {
+      font-size: 0.9rem;
+      padding: 6px 12px;
+    }
+  
+    .neon-link {
+      font-size: 0.8rem;
+    }
+  }
+  
