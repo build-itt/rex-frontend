@@ -28,7 +28,7 @@ const SignUp = () => {
         </form>
 
         <div className="helper-links">
-          <button className="neon-link" onClick={() => navigate('/signup')}>
+          <button className="neon-link" onClick={() => navigate('/signin')}>
             Click here to Sign In
           </button>
         </div>

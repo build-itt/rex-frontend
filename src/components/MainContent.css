@@ -1,0 +1,67 @@
+.main-content {
+    margin-left: 250px;
+    padding: 100px 20px 20px;
+    color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row; /* Change to row to align items horizontally */
+    align-items: flex-start; /* Align items to the top */
+    justify-content: center; /* Center the content horizontally */
+    gap: 20px; /* Add gap between main content and live transactions */
+}
+
+.MenuIcon {
+    color: #ff007f;
+    font-size: 1.5rem;
+    margin-left: 20px;
+    cursor: pointer;
+    z-index: 1;
+    border-radius: 50%;
+    padding: 5px;
+    background-color: #2a2a2a;
+    width: 20px;
+    align-items: center;
+    display: none;
+    z-index: 10000;
+}
+
+.section {
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.section p {
+    font-size: 1.1rem;
+    color: #ddd;
+}
+
+.section-live {
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    flex: 1; /* Allow it to grow and shrink */
+    max-width: 300px; /* Set a max width */
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        margin-left: 0;
+        padding: 100px 20px 20px;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center; /* Center items horizontally */
+        width: calc(100% - 20px);
+    }
+    .MenuIcon {
+        display: flex;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+    }
+    .section-live {
+        max-width: 100%;
+        margin-left: 0; /* Allow it to take full width */
+        
+    }
+}

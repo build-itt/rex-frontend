@@ -1,0 +1,39 @@
+.section {
+    background-color: #2a2a2a; /* Dark background for section blocks */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.7); /* Slight shadow for a lifted effect */
+    width: 90%;
+    margin-left: 30px;
+  }
+  
+  .section h1 {
+    color: #ffffff; /* Hot pink color for the headers */
+    font-size: 2rem; /* Adjust the size of the title */
+    margin-bottom: 10px;
+    text-shadow: 0 0 10px #ff007f; /* Glow effect */
+  }
+  
+  .section p {
+    font-size: 1.1rem; /* Slightly larger text */
+    color: #ddd; /* Light gray for better contrast */
+    line-height: 1.5; /* Spacing between lines for readability */
+    white-space: pre-line; /* Preserve new lines (for multi-line content) */
+    margin: 5px 0;
+  }
+  .section li {
+    font-size: 1.1rem;
+    color: #ddd;
+    margin: 5px 0; /* Add margin to separate lines */
+    list-style-position: inside; /* Ensure list numbers are inside the list item */
+    list-style: none;
+  }
+@media screen and (max-width: 768px) {
+    .section {
+      width: calc(100%-20px);
+      margin-left: 0;
+    }
+    
+}
+  

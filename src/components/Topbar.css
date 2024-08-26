@@ -1,0 +1,110 @@
+.topbar {
+    background: none;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    padding: 0 20px;
+    border-radius: 7px;
+    justify-content: space-evenly;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+}
+
+.glassy {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #f5f5f5;
+    margin-right: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    cursor: pointer;
+}
+.glassy-m{
+    display: none;
+}
+.glassy:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.balance {
+    background-color: #ff007f;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1200px) {
+    .topbar {
+        width: calc(90% - 40px);
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .topbar {
+        width: calc(95% - 40px);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .topbar {
+        width: 100%;
+        left: 0;
+        transform: none;
+        border-radius: 0;
+        padding: 0 10px;
+    }
+    .glassy {
+        margin-right: 0;
+    }
+    .balance {
+        padding: 8px 12px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .topbar {
+        flex-direction: column;
+        width: 100%;
+        box-shadow: none;
+        height: auto;
+        padding: 10px;
+    }
+    .glassy {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 10px;
+        display: none;
+    }
+    .glassy-m{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-weight: bold;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: #f5f5f5;
+    }
+    .balance {
+        width: 100%;
+        text-align: center;
+    }
+}
