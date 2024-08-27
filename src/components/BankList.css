@@ -1,0 +1,119 @@
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: #66ff66; }
+}
+
+.table-typing {
+    display: inline-block;
+    overflow: hidden;
+    border-right: .15em solid #66ff66; /* Neon green caret */
+    white-space: nowrap;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    color: #e6e6e6;
+    letter-spacing: .15em;
+    animation:
+        typing 3.5s steps(30, end),
+        blink-caret .75s step-end infinite;
+}
+
+/* Adjust the speed and delays for each row */
+.typing-row-1 .table-typing {
+    animation-duration: 3.5s;
+    animation-delay: 0.5s;
+}
+
+.typing-row-2 .table-typing {
+    animation-duration: 4.5s;
+    animation-delay: 4s;
+}
+
+.typing-row-3 .table-typing {
+    animation-duration: 5.5s;
+    animation-delay: 8.5s;
+}
+
+/* General container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #0d0d0d; /* Deep dark background color */
+    border: 1px solid #333333; /* Dark gray border */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); /* Strong shadow for depth */
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #191919; /* Very dark gray background for headers */
+    font-weight: bold;
+    color: #66ff66; /* Neon green text for headers */
+    border-bottom: 2px solid #333333;
+    text-transform: uppercase; /* Uppercase text for hacker vibe */
+    letter-spacing: 1px; /* Slightly spaced letters */
+}
+
+td {
+    border-bottom: 1px solid #333333;
+    color: #e6e6e6; /* Light gray text color */
+    font-family: 'Courier New', Courier, monospace; /* Monospace font for a "code" look */
+}
+
+/* Hover effects for rows */
+tbody tr:hover {
+    background-color: #1a1a1a; /* Slightly lighter dark background on hover */
+    cursor: pointer;
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: transparent;
+    border: 2px solid #ff007f;
+    padding: 10px 20px;
+    color: white;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #ff007f;
+    box-shadow: 0 0 10px rgba(255, 0, 127, 1);
+    transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    th, td {
+        padding: 10px 12px;
+    }
+    .container {
+        position: relative;
+        top: -250px;
+        left: -10px;
+    }
+    .btn-primary {
+        padding: 6px 12px;
+    }
+}

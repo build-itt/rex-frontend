@@ -85,10 +85,51 @@
   }
   
   .btn-submit:hover {
-    background-color: #ff007f;
+    background-color: none;
     box-shadow: 0 0 10px rgba(255, 0, 127, 1);
   }
+  .error-message {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    text-align: center;
+    animation: fadeOut 5s ease-in-out forwards;
+  }
   
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  .loader {
+    border: 4px solid rgba(255, 0, 127, 0.2); /* Light pink border */
+    border-top: 4px solid #ff007f; /* Neon pink */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    box-shadow: 0 0 15px #ff007f, 0 0 30px rgba(255, 0, 127, 0.5);
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+    
   .helper-links {
     margin-top: 10px;
   }

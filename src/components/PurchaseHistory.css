@@ -1,0 +1,123 @@
+/* General container styling */
+.history-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    color: #e6e6e6; /* Light gray text color */
+    font-family: 'Courier New', Courier, monospace; /* Monospace font for a "code" look */
+    background-color: #0d0d0d; /* Deep dark background */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #66ff66; /* Neon green text */
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.user-info {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+.purchase-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a; /* Dark gray background */
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    gap: 20px;
+}
+
+.price {
+    flex-basis: 15%;
+}
+
+.amount {
+    color: #66ff66; /* Neon green text */
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.details {
+    flex-basis: 55%;
+    font-size: 1rem;
+}
+
+.actions {
+    flex-basis: 30%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.total {
+    font-size: 1.5rem;
+    color: #e6e6e6; /* Light gray text color */
+}
+
+.btn-paid, .btn-decrypt {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: 'Courier New', Courier, monospace;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-paid {
+    background-color: #ff1a1a; /* Neon red */
+    border: 2px solid #e60000;
+}
+
+.btn-decrypt {
+    background-color: #66ff66; /* Neon green */
+    border: 2px solid #00e600;
+}
+
+.btn-paid:hover {
+    background-color: #e60000;
+    transform: scale(1.05);
+}
+
+.btn-decrypt:hover {
+    background-color: #00e600;
+    transform: scale(1.05);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .purchase-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions {
+        margin-top: 15px;
+        width: 100%;
+        justify-content: space-around;
+    }
+
+    .price, .details, .actions {
+        flex-basis: auto;
+        width: 100%;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .amount, .total {
+        font-size: 1.2rem;
+    }
+}

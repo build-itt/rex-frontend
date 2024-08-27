@@ -1,32 +1,80 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './SignInPage.css';
 import { useNavigate } from 'react-router-dom';
 import ForgotPasswordModal from './ForgotPasswordModal';
 
 const SignInPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const navigate = useNavigate();
 
   const openModal = () => setModalOpen(true);
   const closeModal = () => setModalOpen(false);
-  const navigate = useNavigate();
-  const handleSignIn = () => {
-    // Add your sign-in logic here
-    navigate('/dashboard');
+
+  const handleSignIn = async (event) => {
+    event.preventDefault();
+    setIsLoading(true); // Start loading
+
+    try {
+      const response = await axios.post('https://www.erblan-api.xyz/account/login/', {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        navigate('/dashboard');
+      } else {
+        setErrorMessage('Login failed. Please try again.');
+      }
+    } catch (error) {
+      setErrorMessage('Login failed. Please try again.');
+    } finally {
+      setIsLoading(false); // Stop loading
+    }
+
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 5000);
   };
 
   return (
     <div className="signin-container">
       <div className="form-container">
         <h1 className="signin-title">Sign In</h1>
-        <form>
+        {errorMessage && (
+          <div className="error-message">
+            {errorMessage}
+          </div>
+        )}
+        <form onSubmit={handleSignIn}>
           <div className="input-group">
-            <input type="email" className="neon-input" placeholder="Email" />
+            <input
+              type="email"
+              className="neon-input"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
           <div className="input-group">
-            <input type="password" className="neon-input" placeholder="Password" />
+            <input
+              type="password"
+              className="neon-input"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
           </div>
           <div className="button-container-login">
-            <button type="submit" className="btn btn-submit" onClick={handleSignIn}>Login</button>
+            <button type="submit" className="btn btn-submit" disabled={isLoading}>
+              {isLoading ? <div className="loader"></div> : 'Login'}
+            </button>
           </div>
         </form>
 

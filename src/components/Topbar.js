@@ -12,7 +12,7 @@ function Topbar() {
   };
   return (
     <div className="topbar">
-        <span className="nav-link glassy">
+        <span className="nav-link glassy" onClick={() => navigate('/history')}>
           <FontAwesomeIcon icon={faHistory} /> History
         </span>
         <span className="nav-link glassy">
