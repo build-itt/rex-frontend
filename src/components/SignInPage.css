@@ -61,6 +61,7 @@
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
     border-radius: 5px;
     outline: none;
+    font-size: 16px;
   }
   .neon-input:focus {
     border-color: #00ff9f;

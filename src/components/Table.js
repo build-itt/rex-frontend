@@ -1,15 +1,36 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useParams } from "react-router-dom"; // Import useParams
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import BankList from "./BankList";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons'; // Import faTimes for close icon
+import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
 
-
-const Table =() => {
+const Table = () => {
+  const { slug } = useParams(); // Get the slug from the URL
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
+  const [banks, setBanks] = useState([]);
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
 
+      try {
+        const response = await axios.get('https://www.erblan-api.xyz/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+        const { balance } = response.data;
+        localStorage.setItem('balance', balance);
+      } catch (error) {
+        console.error('Failed to fetch balance', error);
+      }
+    };
+
+    fetchBalance();
+  }, []);
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -26,26 +47,37 @@ const Table =() => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [sidebarRef]);
-    const banks = [
-        { id: '1', balance: '$7,913.00', type: 'Personal', info: 'Info A', state: 'NY', gender: 'Male', dob: '01/01/1980', price: '$302.00' },
-        { id: '2', balance: '$8,016.00', type: 'Business', info: 'Info B', state: 'CA', gender: 'Female', dob: '02/02/1985', price: '$304.00' },
-        { id: '3', balance: '$8,119.00', type: 'Personal', info: 'Info C', state: 'TX', gender: 'Male', dob: '03/03/1990', price: '$306.00' },
-      ];
-    return(
-        <div>
-        <Sidebar ref={sidebarRef} sidebarOpen={sidebarOpen} handleCloseClick={() => setSidebarOpen(false)} />
-          <div 
-          className={sidebarOpen ? 'menuclose' : 'MenuIcon'} 
-          onClick={handleMenuClick}
-          >
-            <FontAwesomeIcon icon={sidebarOpen ? faTimes : faBars} />
-          </div>
-        <Topbar />
-        <div className="main-content">
-          <BankList banks={banks} />
-        </div>
+
+  // Use useCallback to memoize handleBankData function
+  const handleBankData = useCallback(async () => {
+    try {
+      const response = await axios.get(`https://www.erblan-api.xyz/store/category/${slug}/`);
+      const banks = response.data;
+      setBanks(banks);
+    } catch (error) {
+      console.error('Failed to fetch banks', error);
+    }
+  }, [slug]); // Depend on slug
+
+  useEffect(() => {
+    handleBankData(); // Fetch the bank data when the component mounts or slug changes
+  }, [handleBankData]); // Add handleBankData to the dependency array
+
+  return (
+    <div>
+      <Sidebar ref={sidebarRef} sidebarOpen={sidebarOpen} handleCloseClick={() => setSidebarOpen(false)} />
+      <div 
+        className={sidebarOpen ? 'menuclose' : 'MenuIcon'} 
+        onClick={handleMenuClick}
+      >
+        <FontAwesomeIcon icon={sidebarOpen ? faTimes : faBars} />
       </div>
-    )
+      <Topbar />
+      <div className="main-content">
+        <BankList banks={banks} /> {/* Pass banks data to BankList component */}
+      </div>
+    </div>
+  );
 }
 
 export default Table;

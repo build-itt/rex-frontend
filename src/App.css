@@ -5,6 +5,7 @@ body {
   margin: 0;
 }
 
-.App {
-  display: flex;
+
+html, body {
+  width: 100%; /* Ensure full width without overflow */
 }

@@ -31,6 +31,22 @@ const SignUp = () => {
       });
 
       if (response.status === 201) {
+        const { token, username, email, total_products } = response.data;
+
+        // Store user data in localStorage
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify({ username, email, total_products }));
+
+        try {
+          const response = await axios.get('https://www.erblan-api.xyz/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+          const { balance } = response.data;
+          localStorage.setItem('balance', balance);
+          
+        } catch (error) {
+          console.error('Failed to fetch balance', error);
+        }
+
+        // Navigate to the dashboard or any other page
         navigate('/dashboard');
       } else {
         setErrorMessage('Registration failed. Please try again.');

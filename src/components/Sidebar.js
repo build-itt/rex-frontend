@@ -1,4 +1,5 @@
-import React, { useState, forwardRef } from 'react';
+import React, { useState, useEffect, forwardRef, Suspense, lazy } from 'react';
+import axios from 'axios'; // If you plan to make additional API calls
 import './Sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,10 +7,41 @@ import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, fa
 import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
+  const [bitcoinAddress, setBitcoinAddress] = useState(''); // Initialize bitcoin address state
+  const token = localStorage.getItem('token');
+  const [banksByLocation, setBanksByLocation] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {
+        const response = await axios.get('https://www.erblan-api.xyz/store/categories/');
+        const banks = response.data;
+
+        // Group banks by location
+        const groupedBanks = banks.reduce((acc, bank) => {
+          const { location } = bank;
+          if (!acc[location]) {
+            acc[location] = [];
+          }
+          acc[location].push(bank);
+          return acc;
+        }, {});
+
+        setBanksByLocation(groupedBanks);
+      } catch (error) {
+        console.error('Failed to fetch banks', error);
+      }
+    };
+
+    fetchBanks();
+  }, []);
+
   const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    localStorage.removeItem('balance'); // Clear balance on logout
     navigate('/signin');
   };
 
@@ -17,37 +49,53 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const bitcoinAddress = "bc1qzzuuqkczq8n7u0kmvv6pwgqfv9s2ufhnffydxt";
+  const handleAddBalance = async () => {
+    // Implement adding balance here
+    try {
+      const response = await axios.get('https://www.erblan-api.xyz/pay/add/', { headers: { Authorization: `Token ${token}` } });
+      const bitcoinAddress = response.data.addr;
+      setBitcoinAddress(bitcoinAddress);
+    } catch (error) {
+      console.error('Failed to fetch balance', error);
+    }
+  };
+
+  const handleClick = () => {
+    handleAddBalance();
+    toggleModal();
+  };
+
+  // Define the lazy-loaded button component inline
+  const LazyBalanceButton = lazy(() => import('./SidebarBalance'));
 
   return (
     <>
       <div ref={ref} className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <h1 className="sidebar-title">DarkPass</h1>
         <ul className="menu-items">
-          <li className="menu-item active" onClick={() =>navigate('/dashboard')}>
+          <li className="menu-item active" onClick={() => navigate('/dashboard')}>
             <FontAwesomeIcon icon={faTachometerAlt} /> Dashboard
           </li>
-          <li className="menu-item" onClick={toggleModal}>
+          <li className="menu-item" onClick={handleClick}>
             <FontAwesomeIcon icon={faMoneyBillWave} /> Add Balance
           </li>
           <li className="menu-item" onClick={() => navigate('/dumps')}>
             <FontAwesomeIcon icon={faCashRegister} /> Dumps with Pins
           </li>
-          <li className="menu-item dropdown">
-            <FontAwesomeIcon icon={faBank} /> US Banks
-            <ul className="dropdown-content">
-              <li onClick={() => navigate('/table')}>Bank of America</li>
-              <li>Chase</li>
-            </ul>
-          </li>
-          <li className="menu-item dropdown">
-            <FontAwesomeIcon icon={faBank} /> UK Banks
-            <ul className="dropdown-content">
-              <li>HSBC</li>
-              <li>Barclays</li>
-            </ul>
-          </li>
+
+          {/* Render Banks by Location (as shown in previous code) */}
+          {Object.keys(banksByLocation).map(location => (
+            <li key={location} className="menu-item dropdown">
+              <FontAwesomeIcon icon={faBank} /> {location} Banks
+              <ul className="dropdown-content">
+                {banksByLocation[location].map(bank => (
+                  <li key={bank.id} onClick={() => navigate(`/banks/${bank.slug}`)}>{bank.name}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
         </ul>
+
         <div className='topbar-element'>
           <ul className="menu-items">
             <li className="menu-item" onClick={() => navigate('/history')}>
@@ -62,7 +110,11 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           </ul>
         </div>
         <div className='sidebar-footer'>
-          <button className='btn-s' onClick={toggleModal}>Balance: $40000000.00</button>
+          <Suspense fallback={<button className='btn-s' onClick={toggleModal}>
+                loading...
+              </button>}>
+            <LazyBalanceButton toggleModal={toggleModal} />
+          </Suspense>
         </div>
       </div>
       {isModalOpen && (

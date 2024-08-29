@@ -51,7 +51,7 @@
         padding: 100px 20px 20px;
         flex-direction: column; /* Stack items vertically */
         align-items: center; /* Center items horizontally */
-        width: calc(100% - 20px);
+        width: calc(100% - 40px);
     }
     .MenuIcon {
         display: flex;

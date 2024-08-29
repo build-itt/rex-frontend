@@ -98,10 +98,24 @@ tbody tr:hover {
 }
 
 .btn-primary:hover {
-    background-color: #ff007f;
     box-shadow: 0 0 10px rgba(255, 0, 127, 1);
     transform: scale(1.05); /* Slight zoom effect on hover */
 }
+.btn-primary:active {
+    transform: scale(0.95); /* Slight zoom effect on click */
+    background-color: none;
+}
+.success-message {
+    background-color: #488e73;
+    color: white;
+    padding: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    text-align: center;
+    animation: fadeOut 5s ease-in-out forwards;
+  }
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
@@ -110,10 +124,18 @@ tbody tr:hover {
     }
     .container {
         position: relative;
-        top: -250px;
         left: -10px;
     }
     .btn-primary {
         padding: 6px 12px;
+    }
+    .table-typing {
+        font-size: 0.9rem;
+    }
+    .table-typing::after {
+        font-size: 0.9rem;
+    }
+    .table {
+        font-size: 0.9rem;
     }
 }
