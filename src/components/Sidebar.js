@@ -101,9 +101,14 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
             <li className="menu-item" onClick={() => navigate('/history')}>
               <FontAwesomeIcon icon={faHistory} /> History
             </li>
+            
+            <a href="https://t.me/python_god2" target="_blank" rel="noopener noreferrer">
             <li className="menu-item">
               <FontAwesomeIcon icon={faHeadset} /> Support
             </li>
+            </a>
+            
+
             <li className="menu-item" onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </li>

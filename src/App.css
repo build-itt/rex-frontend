@@ -5,7 +5,9 @@ body {
   margin: 0;
 }
 
-
+a{
+  text-decoration: none;
+}
 html, body {
   width: 100%; /* Ensure full width without overflow */
 }
