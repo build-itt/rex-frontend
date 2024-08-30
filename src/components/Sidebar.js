@@ -8,6 +8,7 @@ import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const [bitcoinAddress, setBitcoinAddress] = useState(''); // Initialize bitcoin address state
+  const [isLoading, setIsLoading] = useState(false); // Initialize loading state
   const token = localStorage.getItem('token');
   const [banksByLocation, setBanksByLocation] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -50,13 +51,15 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   };
 
   const handleAddBalance = async () => {
-    // Implement adding balance here
+    setIsLoading(true); // Set loading state to true
     try {
       const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
       const bitcoinAddress = response.data.addr;
       setBitcoinAddress(bitcoinAddress);
     } catch (error) {
       console.error('Failed to fetch balance', error);
+    } finally {
+      setIsLoading(false); // Set loading state to false
     }
   };
 
@@ -122,10 +125,10 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           </ul>
         </div>
         <div className='sidebar-footer'>
-          <Suspense fallback={<button className='btn-s' onClick={toggleModal}>
+          <Suspense fallback={<button className='btn-s' onClick={handleClick}>
                 loading...
               </button>}>
-            <LazyBalanceButton toggleModal={toggleModal} />
+            <LazyBalanceButton toggleModal={handleClick} />
           </Suspense>
         </div>
       </div>
@@ -135,9 +138,13 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
             <h2>Bitcoin Deposit Address</h2>
             <p>This is your Bitcoin deposit address, send only Bitcoin to this address. Sending any other token will result in loss of assets.</p>
             <div className="qr-code">
-              <QRCode value={bitcoinAddress} size={256} bgColor={"#1f1f1f"} fgColor={"#ffffff"} />
+              {isLoading ? (
+                <p>Loading QR Code...</p>
+              ) : (
+                <QRCode value={bitcoinAddress} size={256} bgColor={"#1f1f1f"} fgColor={"#ffffff"} />
+              )}
             </div>
-            <p className="bitcoin-address">{bitcoinAddress}</p>
+            <p className="bitcoin-address">{isLoading ? 'Loading address...' : bitcoinAddress}</p>
             <p>Payments can take hours to confirm, do not panic when such happens. If after 24 hours of payment there is no reflection, contact support.</p>
             <div className="modal-actions">
               <button className="btn-close" onClick={toggleModal}>Close</button>
