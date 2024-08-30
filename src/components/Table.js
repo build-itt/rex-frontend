@@ -21,7 +21,7 @@ const Table = () => {
       }
 
       try {
-        const response = await axios.get('https://www.erblan-api.xyz/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+        const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
         const { balance } = response.data;
         localStorage.setItem('balance', balance);
       } catch (error) {
@@ -51,7 +51,7 @@ const Table = () => {
   // Use useCallback to memoize handleBankData function
   const handleBankData = useCallback(async () => {
     try {
-      const response = await axios.get(`https://www.erblan-api.xyz/store/category/${slug}/`);
+      const response = await axios.get(`https://matrix-backend-alpha.vercel.app/store/category/${slug}/`);
       const banks = response.data;
       setBanks(banks);
     } catch (error) {

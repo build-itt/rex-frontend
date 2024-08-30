@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import './LiveTransactions.css'; // We'll add custom styles for dark mode
 
+const shadyUsernames = [
+  'ShadowHawk', 'GhostRider', 'DarkKnight', 'SilntAsasin', 'PhntmThif',
+  'NightStalker', 'BlackWidow', 'MysticMage', 'ViprVenom', 'CrmsnCobra',
+  'RogueAgent', 'StealthNinja', 'CyberPunk', 'WraithWalker', 'SpecterSpy',
+  'MnightMaruder', 'VenomViper', 'SilentShadow', 'DarkSpecter', 'GhostHunter'
+];
+
 const LiveTransactions = () => {
   const [transactions, setTransactions] = useState([
-    { id: 1, user: 'User A', amount: 500, time: '10:30 AM' },
-    { id: 2, user: 'User B', amount: 1200, time: '10:35 AM' },
+    { id: 1, user: 'ShadowHawk', amount: 500, time: '10:30 AM' },
+    { id: 2, user: 'GhostRider', amount: 1200, time: '10:35 AM' },
   ]);
 
   // Simulate live transactions coming in
@@ -12,7 +19,7 @@ const LiveTransactions = () => {
     const interval = setInterval(() => {
       const newTransaction = {
         id: transactions.length + 1,
-        user: `${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`, // Random User A-Z
+        user: shadyUsernames[Math.floor(Math.random() * shadyUsernames.length)], // Random shady username
         amount: Math.floor(Math.random() * 10000), // Random amount
         time: new Date().toLocaleTimeString(),
       };

@@ -74,7 +74,7 @@
     }
 }
 
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 1090px) {
     .topbar {
         flex-direction: column;
         width: 100%;

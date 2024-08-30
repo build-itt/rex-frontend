@@ -20,7 +20,7 @@ const SignInPage = () => {
     setIsLoading(true); // Start loading
 
     try {
-      const response = await axios.post('https://www.erblan-api.xyz/account/login/', {
+      const response = await axios.post('https://matrix-backend-alpha.vercel.app/account/login/', {
         email,
         password,
       });
@@ -33,7 +33,7 @@ const SignInPage = () => {
         localStorage.setItem('user', JSON.stringify({ username, email, total_products }));
 
         try {
-          const response = await axios.get('https://www.erblan-api.xyz/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+          const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
           const { balance } = response.data;
           localStorage.setItem('balance', balance);
           

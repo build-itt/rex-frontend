@@ -3,7 +3,7 @@ import axios from 'axios'; // If you plan to make additional API calls
 import './Sidebar.css';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
@@ -16,7 +16,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   useEffect(() => {
     const fetchBanks = async () => {
       try {
-        const response = await axios.get('https://www.erblan-api.xyz/store/categories/');
+        const response = await axios.get('https://matrix-backend-alpha.vercel.app/store/categories/');
         const banks = response.data;
 
         // Group banks by location
@@ -52,7 +52,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const handleAddBalance = async () => {
     // Implement adding balance here
     try {
-      const response = await axios.get('https://www.erblan-api.xyz/pay/add/', { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
       const bitcoinAddress = response.data.addr;
       setBitcoinAddress(bitcoinAddress);
     } catch (error) {
@@ -67,6 +67,12 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
 
   // Define the lazy-loaded button component inline
   const LazyBalanceButton = lazy(() => import('./SidebarBalance'));
+
+  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const handleDropdownClick = (location) => {
+    setActiveDropdown(activeDropdown === location ? null : location);
+  };
 
   return (
     <>
@@ -83,10 +89,14 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
             <FontAwesomeIcon icon={faCashRegister} /> Dumps with Pins
           </li>
 
-          {/* Render Banks by Location (as shown in previous code) */}
+          {/* Render Banks by Location */}
           {Object.keys(banksByLocation).map(location => (
-            <li key={location} className="menu-item dropdown">
-              <FontAwesomeIcon icon={faBank} /> {location} Banks
+            <li
+              key={location}
+              className={`menu-item dropdown ${activeDropdown === location ? 'active' : ''}`}
+              onClick={() => handleDropdownClick(location)}
+            >
+              <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={activeDropdown === location ? faChevronUp : faChevronDown} />
               <ul className="dropdown-content">
                 {banksByLocation[location].map(bank => (
                   <li key={bank.id} onClick={() => navigate(`/banks/${bank.slug}`)}>{bank.name}</li>
@@ -101,14 +111,11 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
             <li className="menu-item" onClick={() => navigate('/history')}>
               <FontAwesomeIcon icon={faHistory} /> History
             </li>
-            
-            <a href="https://t.me/python_god2" target="_blank" rel="noopener noreferrer">
             <li className="menu-item">
-              <FontAwesomeIcon icon={faHeadset} /> Support
+              <a href="https://t.me/your_telegram_username" target="_blank" rel="noopener noreferrer">
+                <FontAwesomeIcon icon={faHeadset} /> Support
+              </a>
             </li>
-            </a>
-            
-
             <li className="menu-item" onClick={handleLogout}>
               <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </li>

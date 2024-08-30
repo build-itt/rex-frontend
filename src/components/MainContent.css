@@ -45,7 +45,7 @@
     max-width: 300px; /* Set a max width */
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1090px) {
     .main-content {
         margin-left: 0;
         padding: 100px 20px 20px;

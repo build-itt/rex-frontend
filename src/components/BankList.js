@@ -16,7 +16,7 @@ const BankList = ({ banks }) => {
     setLoadingBankId(bankId); // Set the loading bank ID
     // Implement buying bank here
     try {
-      const response = await axios.post(`https://www.erblan-api.xyz/pay/buy/${bankId}/`, {}, { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.post(`https://matrix-backend-alpha.vercel.app/pay/buy/${bankId}/`, {}, { headers: { Authorization: `Token ${token}` } });
       setSuccessMessage('Purchase successful');
       console.log('Bank purchased', response.data);
       setTimeout(() => {
@@ -37,7 +37,7 @@ const BankList = ({ banks }) => {
   }
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="container">
       {/* Display the bank name or default to "Bank Listings" */}
       <h1 className="text-2xl font-bold mb-4">{bankName}</h1>
       {successMessage && <div className="success-message">{successMessage}</div>}

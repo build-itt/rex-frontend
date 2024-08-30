@@ -25,7 +25,7 @@ const PurchaseHistory = () => {
     // Fetch the data from the server
     const fetchPurchaseHistory = async () => {
       try {
-        const response = await axios.get('https://www.erblan-api.xyz/account/history/', {
+        const response = await axios.get('https://matrix-backend-alpha.vercel.app/account/history/', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Token ${token}`, // Pass token in headers
@@ -85,7 +85,7 @@ const PurchaseHistory = () => {
       return;
     }
     try {
-      const response = await axios.get(`https://www.erblan-api.xyz/pay/decrypt/${purchaseId}/`, {
+      const response = await axios.get(`https://matrix-backend-alpha.vercel.app/pay/decrypt/${purchaseId}/`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`, // Pass token in headers

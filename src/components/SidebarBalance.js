@@ -9,7 +9,7 @@ const SidebarBalance = ({ toggleModal }) => {
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const response = await axios.get('https://www.erblan-api.xyz/pay/balance/', {
+        const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/balance/', {
           headers: { Authorization: `Token ${token}` },
         });
         setBalance(response.data.balance);
