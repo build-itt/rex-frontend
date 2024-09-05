@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Section from './Section';
 import Sidebar from './Sidebar'; // Import Sidebar component
 import LiveTransactions from './LiveTransactions'; // Import LiveTransactions component
+import CommentSection from './CommentSection'; // Import CommentSection component
 import './MainContent.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons'; // Import faTimes for close icon
@@ -46,6 +47,7 @@ function MainContent() {
             title="Terms & Conditions" 
             content={"1. No sharing of accounts.\n2. All inactive accounts will be deleted after 6 months of inactivity\n3. We assume no responsibility for any further activities you take with the purchased log in your possession.\n4. All account left inactive for six months will be deactivated.\n5. Funds sent through Bitcoin will be credited to your account after server confirmation.\n6. All logs bought by users will be sent to you via the email you registered with and will be deleted immediately after.\n⚠️ Do not hesitate to contact customer service when you encounter any issue."} 
           />
+          <CommentSection />
         </div>
         <div className="section-live">
           <LiveTransactions />

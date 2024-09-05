@@ -24,7 +24,7 @@ function Topbar() {
       <span className="nav-link glassy" onClick={() => navigate('/history')}>
         <FontAwesomeIcon icon={faHistory} /> History
       </span>
-      <a href="https://t.me/python_god2" target="_blank" rel="noopener noreferrer" className="nav-link glassy">
+      <a href="https://t.me/darkpasssupport/" target="_blank" rel="noopener noreferrer" className="nav-link glassy">
         <FontAwesomeIcon icon={faHeadset} /> Support
       </a>
       <span className="nav-link glassy" onClick={handleLogout}>

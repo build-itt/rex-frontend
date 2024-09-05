@@ -14,7 +14,7 @@ const RouteWrapper = ({ children }) => {
       }
 
       try {
-        const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/balance/', {
+        const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/balance/', {
           headers: { Authorization: `Token ${token}` }
         });
         const { balance } = response.data;

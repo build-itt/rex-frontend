@@ -14,7 +14,7 @@ const Dashboard = () => {
       }
 
       try {
-        const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+        const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/balance/', { headers: { Authorization: `Token ${token}` } });
         const { balance } = response.data;
         localStorage.setItem('balance', balance);
       } catch (error) {

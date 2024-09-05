@@ -17,7 +17,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   useEffect(() => {
     const fetchBanks = async () => {
       try {
-        const response = await axios.get('https://matrix-backend-alpha.vercel.app/store/categories/');
+        const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/store/categories/');
         const banks = response.data;
 
         // Group banks by location
@@ -53,7 +53,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const handleAddBalance = async () => {
     setIsLoading(true); // Set loading state to true
     try {
-      const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/add/', { headers: { Authorization: `Token ${token}` } });
       const bitcoinAddress = response.data.addr;
       setBitcoinAddress(bitcoinAddress);
     } catch (error) {
@@ -115,7 +115,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
               <FontAwesomeIcon icon={faHistory} /> History
             </li>
             <li className="menu-item">
-              <a href="https://t.me/your_telegram_username" target="_blank" rel="noopener noreferrer">
+              <a href="https://t.me/darkpasssupport/" target="_blank" rel="noopener noreferrer">
                 <FontAwesomeIcon icon={faHeadset} /> Support
               </a>
             </li>

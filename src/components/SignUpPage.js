@@ -24,21 +24,21 @@ const SignUp = () => {
     }
 
     try {
-      const response = await axios.post('https://matrix-backend-alpha.vercel.app/account/register/', {
+      const response = await axios.post('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/account/register/', {
         email,
         username,
         password,
       });
 
       if (response.status === 201) {
-        const { token, username, email, total_products } = response.data;
+        const { token, username, email, total_products, id } = response.data;
 
         // Store user data in localStorage
         localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify({ username, email, total_products }));
+        localStorage.setItem('user', JSON.stringify({ username, email, total_products, id }));
 
         try {
-          const response = await axios.get('https://matrix-backend-alpha.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+          const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/balance/', { headers: { Authorization: `Token ${token}` } });
           const { balance } = response.data;
           localStorage.setItem('balance', balance);
           

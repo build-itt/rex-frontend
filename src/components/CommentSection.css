@@ -1,0 +1,254 @@
+/* CommentSection.css */
+.comment-section {
+  background-color: #1a1a1a;
+  padding: 20px;
+  color: #fff;
+  width: 93%;
+  border: 1px solid #ff00ff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px #ff00ff;
+  max-height: 500px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ff00ff #1a1a1a;
+  margin-left: 20px;
+}
+
+@keyframes neon-border {
+  0% {
+    box-shadow: 0 0 5px #ff00ff, 0 0 20px #ff00ff, 0 0 40px #ff00ff, 0 0 80px #ff00ff;
+  }
+  100% {
+    box-shadow: 0 0 10px #ff00ff, 0 0 30px #ff00ff, 0 0 60px #ff00ff, 0 0 100px #ff00ff;
+  }
+}
+
+.comment-input {
+  width: 95%;
+  background-color: #2d2d2d;
+  color: #fff;
+  border: 2px solid #ff00ff;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+.comment-input:focus {
+  border-color: #00ff00;
+  box-shadow: 0 0 5px #00ff00;
+}
+
+.upload-button {
+  color: #ff00ff;
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 14px;
+  transition: color 0.3s ease;
+}
+
+.upload-button:hover {
+  color: #00ff00;
+  animation: glitch 1s infinite;
+}
+
+.delete-button, .post-button {
+  background-color: transparent;
+  border: 2px solid #ff007f;
+  padding: 10px 20px;
+  color: white;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+}
+
+.delete-button:hover, .post-button:hover {
+  background-color: rgba(255, 0, 127, 0.2);
+  box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+  animation: pulse 0.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.comment-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-list {
+  margin-top: 20px;
+}
+
+.comment-item {
+  background-color: #101010;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 5px;
+  width: 95%;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+  color: #33ff33;
+  font-family: 'Courier New', Courier, monospace;
+  line-height: 1.5;
+  box-shadow: 0 0 10px #00ff00;
+  animation: 
+             flicker 1.5s infinite alternate;
+}
+.comment-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+@keyframes terminal-typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 95%;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.media-preview {
+  margin-top: 10px;
+}
+
+.media-preview img,
+.media-preview video {
+  max-width: 100%;
+  border: 2px solid #ff00ff;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.media-preview img:hover,
+.media-preview video:hover {
+  filter: brightness(1.2);
+}
+
+.mention {
+  color: #00ff00;
+  font-weight: bold;
+  text-shadow: 0 0 5px #00ff00;
+  animation: text-glow 1.5s infinite alternate;
+}
+
+@keyframes text-glow {
+  0% {
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+  }
+  100% {
+    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00;
+  }
+}
+
+.load-more {
+  background-color: #2d2d2d;
+  color: #ff00ff;
+  border: 1px solid #ff00ff;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.load-more:hover {
+  background-color: #ff00ff;
+  color: #2d2d2d;
+}
+
+@keyframes glitch {
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(2px, -2px);
+  }
+  60% {
+    transform: translate(-2px, -2px);
+  }
+  80% {
+    transform: translate(2px, 2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+/* CommentSection.css */
+
+/* Existing styles here... */
+
+.comment-body {
+  position: relative;
+  display: inline-block; /* Ensure the blinking effect is applied to the whole text */
+  padding-right: 10px; /* Add some space for the cursor */
+}
+
+/* Blinking cursor effect at the end of the comment body */
+.comment-body::after {
+  content: '_';
+  animation: blink 1s infinite step-end;
+  position: absolute;
+  right: 0;
+  display: inline-block;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .comment-head {
+    display: block;
+  }
+  .comment-section {
+    margin-left: 0;
+  }
+}

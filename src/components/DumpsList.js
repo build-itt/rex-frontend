@@ -14,7 +14,7 @@ const DumpsList = ({ banks }) => {
     setLoadingBankId(bankId); // Set the loading bank ID
     // Implement buying bank here
     try {
-      const response = await axios.post(`https://matrix-backend-alpha.vercel.app/pay/buy/${bankId}/`, {}, { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.post(`http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/buy/${bankId}/`, {}, { headers: { Authorization: `Token ${token}` } });
       setSuccessMessage('Purchase successful');
       console.log('Bank purchased', response.data);
       setTimeout(() => {

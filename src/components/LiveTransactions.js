@@ -1,33 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import './LiveTransactions.css'; // We'll add custom styles for dark mode
+import React, { useEffect, useState, useRef } from 'react';
+import './LiveTransactions.css';
 
-const shadyUsernames = [
-  'ShadowHawk', 'GhostRider', 'DarkKnight', 'SilntAsasin', 'PhntmThif',
-  'NightStalker', 'BlackWidow', 'MysticMage', 'ViprVenom', 'CrmsnCobra',
-  'RogueAgent', 'StealthNinja', 'CyberPunk', 'WraithWalker', 'SpecterSpy',
-  'MnightMaruder', 'VenomViper', 'SilentShadow', 'DarkSpecter', 'GhostHunter'
-];
+// Function to generate a random six-letter username
+const generateRandomUsername = (existingUsernames) => {
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  let username = '';
+
+  // Keep generating until we get a unique one
+  do {
+    username = '';
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * letters.length);
+      username += letters[randomIndex];
+    }
+  } while (existingUsernames.has(username)); // Ensure no immediate repetition
+
+  return username;
+};
+
+// Function to generate a random time within the last 100 seconds
+const generateRandomTime = () => {
+  return new Date(new Date().getTime() - Math.random() * 100000).toLocaleTimeString();
+};
+
+// Function to generate a random amount between min and max values
+const generateRandomAmount = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
 const LiveTransactions = () => {
-  const [transactions, setTransactions] = useState([
-    { id: 1, user: 'ShadowHawk', amount: 500, time: '10:30 AM' },
-    { id: 2, user: 'GhostRider', amount: 1200, time: '10:35 AM' },
-  ]);
+  const [transactions, setTransactions] = useState([]);
+  const existingUsernames = useRef(new Set()); // Use useRef to track usernames
+
+  // Generate two random initial transactions with random usernames and times
+  useEffect(() => {
+    const initialTransactions = Array.from({ length: 2 }).map((_, index) => {
+      const username = generateRandomUsername(existingUsernames.current); // Use the ref
+      const time = generateRandomTime();
+      return {
+        id: index + 1,
+        user: username,
+        amount: generateRandomAmount(267, 517), // Use the new range
+        time,
+      };
+    });
+
+    setTransactions(initialTransactions);
+
+    // Add the initial usernames to the set of existing usernames
+    initialTransactions.forEach((txn) => {
+      existingUsernames.current.add(txn.user); // Update the ref directly
+    });
+  }, []); // Empty dependency array so this runs only once
 
   // Simulate live transactions coming in
   useEffect(() => {
     const interval = setInterval(() => {
       const newTransaction = {
         id: transactions.length + 1,
-        user: shadyUsernames[Math.floor(Math.random() * shadyUsernames.length)], // Random shady username
-        amount: Math.floor(Math.random() * 10000), // Random amount
-        time: new Date().toLocaleTimeString(),
+        user: generateRandomUsername(existingUsernames.current), // Use the ref
+        amount: generateRandomAmount(267, 517), // Use the new range
+        time: generateRandomTime(), // Random time
       };
+
+      // Add the new username to the set of existing ones
+      existingUsernames.current.add(newTransaction.user); // Update the ref
+
+      // Add the new transaction to the list
       setTransactions((prev) => [newTransaction, ...prev]);
-    }, 5000); // Update every 5 seconds
+
+    }, Math.random() * 4000 + 3000); // Random interval between 3 to 7 seconds
 
     return () => clearInterval(interval);
-  }, [transactions]);
+  }, [transactions]); // Track transactions as a dependency
 
   return (
     <div className="live-transactions">
