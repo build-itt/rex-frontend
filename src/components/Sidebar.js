@@ -1,9 +1,10 @@
 import React, { useState, useEffect, forwardRef, Suspense, lazy } from 'react';
 import axios from 'axios'; // If you plan to make additional API calls
 import './Sidebar.css';
+import CashoutModal from './CashoutModal';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp,faBitcoinSign } from '@fortawesome/free-solid-svg-icons';
 import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
@@ -11,6 +12,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const [isLoading, setIsLoading] = useState(false); // Initialize loading state
   const token = localStorage.getItem('token');
   const [banksByLocation, setBanksByLocation] = useState({});
+  const [isCashoutModalOpen, setIsCashoutModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -49,7 +51,10 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
+  const toggleCashoutModal = () => {
+    setIsCashoutModalOpen(!isCashoutModalOpen);
+  };
+  
   const handleAddBalance = async () => {
     setIsLoading(true); // Set loading state to true
     try {
@@ -90,6 +95,9 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           </li>
           <li className="menu-item" onClick={() => navigate('/dumps')}>
             <FontAwesomeIcon icon={faCashRegister} /> Dumps with Pins
+          </li>
+          <li className="menu-item" onClick={toggleCashoutModal}>
+            <FontAwesomeIcon icon={faBitcoinSign} /> Cashout BTC
           </li>
 
           {/* Render Banks by Location */}
@@ -132,6 +140,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           </Suspense>
         </div>
       </div>
+      <CashoutModal isOpen={isCashoutModalOpen} onClose={toggleCashoutModal} />
       {isModalOpen && (
         <div className="modal-overlay" onClick={toggleModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>

@@ -191,7 +191,6 @@ export default function CommentSectionComponent() {
                   )}
                 </div>
               )}
-              <div className="comment-footer">
               {/* Show delete button for user's own comments */}
               {user.id === comment.created_by && (
                 <button
@@ -201,7 +200,6 @@ export default function CommentSectionComponent() {
                   {deletingCommentId === comment.id ? <div className="loader"></div> : 'Delete'}
                 </button>
               )}
-              </div>
             </div>
           ))
         )}
