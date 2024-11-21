@@ -96,10 +96,11 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           <li className="menu-item" onClick={() => navigate('/dumps')}>
             <FontAwesomeIcon icon={faCashRegister} /> Dumps with Pins
           </li>
+          {/* Add Cashout BTC menu item 
           <li className="menu-item" onClick={toggleCashoutModal}>
             <FontAwesomeIcon icon={faBitcoinSign} /> Cashout BTC
           </li>
-
+          */}
           {/* Render Banks by Location */}
           {Object.keys(banksByLocation).map(location => (
             <li
