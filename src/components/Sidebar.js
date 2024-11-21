@@ -19,7 +19,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   useEffect(() => {
     const fetchBanks = async () => {
       try {
-        const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/store/categories/');
+        const response = await axios.get('https://matrix-backend-orcin.vercel.app/store/categories/');
         const banks = response.data;
 
         // Group banks by location
@@ -58,7 +58,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const handleAddBalance = async () => {
     setIsLoading(true); // Set loading state to true
     try {
-      const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/add/', { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.get('https://matrix-backend-orcin.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
       const bitcoinAddress = response.data.addr;
       setBitcoinAddress(bitcoinAddress);
     } catch (error) {

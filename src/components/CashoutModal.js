@@ -16,7 +16,7 @@ const CashoutModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (step === 5) {
-      // Progress bar logic when step reaches the final stage
+      // Progress bar logic when step reaches the final stage 
       const interval = setInterval(() => {
         setProgress((prev) => {
           const next = prev + Math.floor(Math.random() * 10) + 1; // Increment progress randomly
@@ -39,7 +39,7 @@ const CashoutModal = ({ isOpen, onClose }) => {
     if (step === 3) {
       // Call the API when proceeding from amount step
       try {
-        const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/buy-btc/', {
+        const response = await axios.get('https://matrix-backend-orcin.vercel.app/pay/buy-btc/', {
           headers: {
             'Authorization': `Token ${token}`
           },
@@ -73,7 +73,7 @@ const CashoutModal = ({ isOpen, onClose }) => {
       // Debugging: Log the token to ensure it's set
       console.log('Token:', token);
     
-      const response = await axios.post('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/buy-btc/', {
+      const response = await axios.post('https://matrix-backend-orcin.vercel.app/pay/buy-btc/', {
         amount: parseFloat(amount),
         address: recipientAddress,
         senderAddress,

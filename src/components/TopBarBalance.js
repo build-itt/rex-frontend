@@ -9,7 +9,7 @@ const BalanceButton = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const response = await axios.get('http://avyjg4i5avov7sikuxeskxm4wjgkuxtzr6tcd4zxmsblf5rcsdp763id.onion/pay/balance/', {
+        const response = await axios.get('https://matrix-backend-orcin.vercel.app/pay/balance/', {
           headers: { Authorization: `Token ${token}` },
         });
         setBalance(response.data.balance);
