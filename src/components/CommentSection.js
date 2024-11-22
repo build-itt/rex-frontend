@@ -107,7 +107,8 @@ export default function CommentSectionComponent() {
   const handleMediaUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setMedia(file);  
+      setMedia(file); 
+      setNewComment(`Uploaded: ${file.name}`);  // Update the comment input with the file name 
     }
   };
 
