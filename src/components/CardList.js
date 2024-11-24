@@ -3,16 +3,15 @@ import "./BankList.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const BankList = ({ banks }) => {
-  console.log('Received Banks:', banks);
-  const [selectedTag, setSelectedTag] = useState('balance');
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [filteredBanks, setFilteredBanks] = useState(banks);
+const CardList = ({ banks }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [loadingBankId, setLoadingBankId] = useState(null);
+  const [loadingBankId, setLoadingBankId] = useState(null); // State to track the loading bank ID
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const [selectedTag, setSelectedTag] = useState('base');
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filteredBanks, setFilteredBanks] = useState(banks);
 
   const handleTagChange = (event) => {
     setSelectedTag(event.target.value);
@@ -47,7 +46,8 @@ const BankList = ({ banks }) => {
 
   const handleBuy = async (bankId, event) => {
     event.preventDefault();
-    setLoadingBankId(bankId);
+    setLoadingBankId(bankId); // Set the loading bank ID
+    // Implement buying bank here
     try {
       const response = await axios.post(`https://matrix-backend-orcin.vercel.app/pay/buy/${bankId}/`, {}, { headers: { Authorization: `Token ${token}` } });
       setSuccessMessage('Purchase successful');
@@ -55,18 +55,19 @@ const BankList = ({ banks }) => {
       setTimeout(() => {
         navigate('/banks/extraction');
         window.location.reload();
-      }, 2000);
+      } ,2000);
+
     } catch (error) {
       console.error('Failed to buy bank', error);
       setErrorMessage(error.response?.data?.message || 'An error occurred');
     } finally {
-      setLoadingBankId(null);
+      setLoadingBankId(null); // Reset the loading bank ID
     }
     setTimeout(() => {
       setErrorMessage('');
       setSuccessMessage('');
     }, 5000);
-  };
+  }
 
   return (
     <div className="container">
@@ -78,6 +79,7 @@ const BankList = ({ banks }) => {
           </span>
         ))}
       </div>
+
       {/* Advanced search */}
       <div className="flex items-center justify-center p-4 bg-none mb-3 shadow rounded-lg">
         <div className="flex items-center">
@@ -86,12 +88,16 @@ const BankList = ({ banks }) => {
             value={selectedTag}
             onChange={handleTagChange}
           >
-            <option value="balance">Balance</option>
+            <option value="base">Base</option>
+            <option value="bin">Bin</option>
+            <option value="level">Level</option>
             <option value="type">Type</option>
+            <option value="exp">Exp</option>
+            <option value="zip">Zip</option>
             <option value="Info">Info</option>
             <option value="state">State</option>
-            <option value="gender">Gender</option>
-            <option value="dob">DoB</option>
+            <option value="bank">Bank</option>
+            <option value="country">Country</option>
             <option value="price">Price</option>
           </select>
         </div>
@@ -119,12 +125,16 @@ const BankList = ({ banks }) => {
       <table className="min-w-full bg-white border border-gray-200">
         <thead className="bg-gray-100">
           <tr>
-            <th className="px-4 py-2">Balance</th>
+            <th className="px-4 py-2">Base</th>
+            <th className="px-4 py-2">Bin</th>
+            <th className="px-4 py-2">Level</th>
             <th className="px-4 py-2">Type</th>
+            <th className="px-4 py-2">Exp</th>
+            <th className="px-4 py-2">Zip</th>
             <th className="px-4 py-2">Info</th>
             <th className="px-4 py-2">State</th>
-            <th className="px-4 py-2">Gender</th>
-            <th className="px-4 py-2">DoB</th>
+            <th className="px-4 py-2">Bank</th>
+            <th className="px-4 py-2">Country</th>
             <th className="px-4 py-2">Price</th>
             <th className="px-4 py-2"></th>
           </tr>
@@ -132,12 +142,16 @@ const BankList = ({ banks }) => {
         <tbody>
           {filteredBanks.map((bank, index) => (
             <tr key={bank.id} className={`typing-row-${index + 1} border-t`}>
-              <td className="px-4 py-2"><span className="table-typing">${bank.balance}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">${bank.base}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">${bank.bin}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">${bank.level}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.type}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">${bank.exp}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">${bank.zip}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.Info}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.state}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.gender}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.dob}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.bank}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.country}</span></td>
               <td className="px-4 py-2"><span className="table-typing">${bank.price.toFixed(2)}</span></td>
               <td className="px-4 py-2">
                 <button
@@ -157,4 +171,4 @@ const BankList = ({ banks }) => {
   );
 };
 
-export default BankList;
+export default CardList;

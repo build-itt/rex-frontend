@@ -42,8 +42,9 @@ const PurchaseHistory = () => {
         const mappedPurchases = data.invoices.map(invoice => ({
           id: invoice.id,
           amount: invoice.received,
-          details: `${invoice.product.name} - ${invoice.product.Title} (${invoice.product.Balance})`,
+          details: `${invoice.product.name} - ${invoice.product.type} ($${invoice.product.balance})`,
           total: invoice.product.price,
+          balance: invoice.product.balance,
           decrypted: invoice.decrypted,
         }));
 
@@ -131,7 +132,6 @@ const PurchaseHistory = () => {
             <p>{purchase.details}</p>
           </div>
           <div className="actions">
-            <span className="total">${purchase.total}</span>
             <button className="btn-paid">Paid</button>
             <button
               className="btn-decrypt"

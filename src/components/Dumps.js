@@ -9,6 +9,7 @@ import axios from 'axios';
 const Dumps = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [banks, setBanks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const sidebarRef = useRef(null);
 
   useEffect(() => {
@@ -33,11 +34,14 @@ const Dumps = () => {
 
   useEffect(() => {
     const fetchDumps = async () => {
+      setLoading(true);
       try {
         const response = await axios.get('https://matrix-backend-orcin.vercel.app/store/category/dumps/');
         setBanks(response.data);
       } catch (error) {
         console.error('Failed to fetch dumps', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -73,7 +77,11 @@ const Dumps = () => {
       </div>
       <Topbar />
       <div className="main-content">
-        <DumpsList banks={banks} />
+        {loading ? (
+          <div className="table-typing">Loading...</div>
+        ) : (
+          <DumpsList banks={banks} />
+        )}
       </div>
     </div>
   );

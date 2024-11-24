@@ -4,7 +4,7 @@ import './Sidebar.css';
 import CashoutModal from './CashoutModal';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp,faBitcoinSign } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
@@ -95,6 +95,9 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           </li>
           <li className="menu-item" onClick={() => navigate('/dumps')}>
             <FontAwesomeIcon icon={faCashRegister} /> Dumps with Pins
+          </li>
+          <li className="menu-item" onClick={() => navigate('/cards')}>
+            <FontAwesomeIcon icon={faCreditCard} /> Cards
           </li>
           {/* Add Cashout BTC menu item 
           <li className="menu-item" onClick={toggleCashoutModal}>

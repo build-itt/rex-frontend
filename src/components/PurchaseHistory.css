@@ -81,8 +81,8 @@
 }
 
 .btn-decrypt {
-    background-color: #66ff66; /* Neon green */
-    border: 2px solid #00e600;
+    background-color: #66ff6663 !important; /* Neon green */
+    border: 2px solid #00e6004b !important;
 }
 
 .btn-paid:hover {

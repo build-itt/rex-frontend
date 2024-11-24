@@ -1,38 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom"; // Import useParams
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import BankList from "./BankList";
+import CardList from "./CardList";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 
-const Table = () => {
-  const { slug } = useParams(); // Get the slug from the URL
+const Cards = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
   const [banks, setBanks] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
 
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
-      try {
-        const response = await axios.get('https://matrix-backend-orcin.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
-        const { balance } = response.data;
-        localStorage.setItem('balance', balance);
-      } catch (error) {
-        console.error('Failed to fetch balance', error);
-      }
-    };
-
-    fetchBalance();
-  }, []);
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
@@ -54,7 +33,7 @@ const Table = () => {
   const handleBankData = useCallback(async () => {
     setLoading(true); // Set loading to true before fetching data
     try {
-      const response = await axios.get(`https://matrix-backend-orcin.vercel.app/store/category/${slug}/`);
+      const response = await axios.get(`https://matrix-backend-orcin.vercel.app/store/category/dumps/`);
       const banks = response.data;
       setBanks(banks);
     } catch (error) {
@@ -62,7 +41,7 @@ const Table = () => {
     } finally {
       setLoading(false); // Set loading to false after fetching data
     }
-  }, [slug]); // Depend on slug
+  }, []); // Depend on slug
 
   useEffect(() => {
     handleBankData(); // Fetch the bank data when the component mounts or slug changes
@@ -82,11 +61,11 @@ const Table = () => {
         {loading ? (
           <div className="table-typing">Loading...</div> // Display loading indicator
         ) : (
-          <BankList banks={banks} />    
+          <CardList banks={banks} /> // Pass banks data to CardList component
         )}
       </div>
     </div>
   );
 }
 
-export default Table;
+export default Cards;

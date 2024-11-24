@@ -4,6 +4,7 @@ import LandingPage from './components/LandingPage';
 import SignIn from './components/SignInPage';
 import SignUp from './components/SignUpPage';
 import Dashboard from './components/Dashboard';
+import Cards from './components/Cards';
 import Table from './components/Table';
 import Dumps from './components/Dumps';
 import History from './components/History';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute element={Dashboard} />} />
           <Route path="/banks/:slug" element={<ProtectedRoute element={Table} />} />
           <Route path="/dumps" element={<ProtectedRoute element={Dumps} />} />
+          <Route path="/cards" element={<ProtectedRoute element={Cards} />} />
           <Route path="/history" element={<ProtectedRoute element={History} />} />
           <Route path="/password/reset" element={<PasswordResetConfirm />} /> {/* Update the route */}
         </Routes>
