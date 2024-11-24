@@ -125,9 +125,7 @@ const CardList = ({ banks }) => {
       <table className="min-w-full bg-white border border-gray-200">
         <thead className="bg-gray-100">
           <tr>
-            <th className="px-4 py-2">Base</th>
             <th className="px-4 py-2">Bin</th>
-            <th className="px-4 py-2">Level</th>
             <th className="px-4 py-2">Type</th>
             <th className="px-4 py-2">Exp</th>
             <th className="px-4 py-2">Zip</th>
@@ -142,9 +140,7 @@ const CardList = ({ banks }) => {
         <tbody>
           {filteredBanks.map((bank, index) => (
             <tr key={bank.id} className={`typing-row-${index + 1} border-t`}>
-              <td className="px-4 py-2"><span className="table-typing">{bank.base}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.bin}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.level}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.type}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.exp}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.zip}</span></td>
