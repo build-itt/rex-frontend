@@ -88,9 +88,7 @@ const CardList = ({ banks }) => {
             value={selectedTag}
             onChange={handleTagChange}
           >
-            <option value="base">Base</option>
             <option value="bin">Bin</option>
-            <option value="level">Level</option>
             <option value="type">Type</option>
             <option value="exp">Exp</option>
             <option value="zip">Zip</option>
