@@ -18,7 +18,7 @@
     z-index: 1;
     border-radius: 50%;
     padding: 5px;
-    background-color: #2a2a2a;
+    background-color: none;
     width: 20px;
     align-items: center;
     display: none;
@@ -48,10 +48,11 @@
 @media screen and (max-width: 1090px) {
     .main-content {
         margin-left: 0;
-        padding: 100px 20px 20px;
+        padding: 100px 20px 20px !important;
         flex-direction: column; /* Stack items vertically */
         align-items: center; /* Center items horizontally */
-        width: calc(100% - 40px);
+        width: calc(100%) !important;
+        justify-content: center;
     }
     .MenuIcon {
         display: flex;
