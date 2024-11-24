@@ -33,7 +33,7 @@ const Cards = () => {
   const handleBankData = useCallback(async () => {
     setLoading(true); // Set loading to true before fetching data
     try {
-      const response = await axios.get(`https://matrix-backend-orcin.vercel.app/store/category/dumps/`);
+      const response = await axios.get(`https://matrix-backend-orcin.vercel.app/store/category/cards/`);
       const banks = response.data;
       setBanks(banks);
     } catch (error) {

@@ -142,12 +142,12 @@ const CardList = ({ banks }) => {
         <tbody>
           {filteredBanks.map((bank, index) => (
             <tr key={bank.id} className={`typing-row-${index + 1} border-t`}>
-              <td className="px-4 py-2"><span className="table-typing">${bank.base}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">${bank.bin}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">${bank.level}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.base}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.bin}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.level}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.type}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">${bank.exp}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">${bank.zip}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.exp}</span></td>
+              <td className="px-4 py-2"><span className="table-typing">{bank.zip}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.Info}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.state}</span></td>
               <td className="px-4 py-2"><span className="table-typing">{bank.bank}</span></td>
