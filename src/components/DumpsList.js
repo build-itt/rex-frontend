@@ -80,6 +80,7 @@ const DumpsList = ({ banks }) => {
           </span>
         ))}
       </div>
+      
 
       <div className="flex items-center justify-center p-4 bg-none mb-3 shadow rounded-lg">
         <div className="flex items-center">
