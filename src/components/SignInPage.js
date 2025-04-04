@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './SignInPage.css';
 import { useNavigate } from 'react-router-dom';
 import ForgotPasswordModal from './ForgotPasswordModal';
+import { authService, paymentService } from '../services/api';
 
 const SignInPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const openModal = () => setModalOpen(true);
@@ -17,44 +17,64 @@ const SignInPage = () => {
 
   const handleSignIn = async (event) => {
     event.preventDefault();
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
+    setErrorMessage('');
 
     try {
-      const response = await axios.post('https://matrix-backend-henna.vercel.app/account/login/', {
+      // Use the centralized API service for login
+      const response = await authService.login({
         email,
         password,
       });
 
-      if (response.status === 200) {
-        const { token, username, email, total_products, id } = response.data;
+      const { token, username, email: userEmail, total_products, id } = response.data;
 
-        // Store user data in localStorage
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify({ username, email, total_products,id }));
+      // Store user data in localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify({ username, email: userEmail, total_products, id }));
 
-        try {
-          const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
-          const { balance } = response.data;
-          localStorage.setItem('balance', balance);
-          
-        } catch (error) {
-          console.error('Failed to fetch balance', error);
+      try {
+        // Fetch balance using the centralized API service
+        const balanceResponse = await paymentService.getBalance();
+        const { balance } = balanceResponse.data;
+        localStorage.setItem('balance', balance);
+      } catch (error) {
+        console.error('Failed to fetch balance', error);
+        // Continue even if balance fetch fails
+      }
+
+      // Navigate to the dashboard
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      // Better error handling
+      if (error.response) {
+        // Server responded with an error
+        if (error.response.data && error.response.data.non_field_errors) {
+          setErrorMessage(error.response.data.non_field_errors[0]);
+        } else if (error.response.data && error.response.data.detail) {
+          setErrorMessage(error.response.data.detail);
+        } else {
+          setErrorMessage('Invalid credentials. Please try again.');
         }
-
-        // Navigate to the dashboard or any other page
-        navigate('/dashboard');
+      } else if (error.request) {
+        // Request was made but no response received
+        setErrorMessage('Server not responding. Please try again later.');
       } else {
+        // Other errors
         setErrorMessage('Login failed. Please try again.');
       }
-    } catch (error) {
-      setErrorMessage('Login failed. Please try again.');
     } finally {
-      setIsLoading(false); // Stop loading
+      setIsLoading(false);
     }
 
-    setTimeout(() => {
-      setErrorMessage('');
-    }, 5000);
+    // Clear error message after 5 seconds
+    if (errorMessage) {
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 5000);
+    }
   };
 
   return (

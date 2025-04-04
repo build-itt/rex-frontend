@@ -1,25 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "./BankList.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const BankList = ({ banks }) => {
-  console.log('Received Banks:', banks);
   const [selectedTag, setSelectedTag] = useState('balance');
+  const [searchInput, setSearchInput] = useState('');
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filteredBanks, setFilteredBanks] = useState(banks);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loadingBankId, setLoadingBankId] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownOptions, setDropdownOptions] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
 
-  const handleTagChange = (event) => {
-    setSelectedTag(event.target.value);
+  // Initialize filtered banks when component mounts or banks changes
+  useEffect(() => {
+    setFilteredBanks(banks);
+    // Update dropdown options when selected tag changes
+    updateDropdownOptions();
+  }, [banks, selectedTag]);
+
+  const updateDropdownOptions = () => {
+    if (!banks || !banks.length) return;
+    
+    // Get unique values for the selected tag
+    const options = [...new Set(banks
+      .map(bank => bank[selectedTag])
+      .filter(Boolean)
+    )];
+    
+    setDropdownOptions(options);
   };
 
-  const handleSearchSelect = (event) => {
+  const handleTagChange = (event) => {
+    setSelectedTag(event.target.value);
+    setSearchInput('');
+    setShowDropdown(false);
+  };
+
+  const handleSearchInputChange = (event) => {
     const value = event.target.value;
+    setSearchInput(value);
+    
+    if (value.length > 0) {
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleOptionSelect = (value) => {
     if (value) {
       const newFilter = `${selectedTag}:${value}`;
       if (!selectedFilters.includes(newFilter)) {
@@ -28,13 +61,18 @@ const BankList = ({ banks }) => {
         filterData(updatedFilters);
       }
     }
+    setSearchInput('');
+    setShowDropdown(false);
   };
 
   const filterData = (filters) => {
     let filtered = banks;
     filters.forEach(filter => {
       const [tag, value] = filter.split(':');
-      filtered = filtered.filter(bank => bank[tag].toString().includes(value));
+      filtered = filtered.filter(bank => {
+        const bankValue = bank[tag];
+        return bankValue && bankValue.toString().toLowerCase().includes(value.toLowerCase());
+      });
     });
     setFilteredBanks(filtered);
   };
@@ -68,91 +106,137 @@ const BankList = ({ banks }) => {
     }, 5000);
   };
 
+  // Function to render column with possible abbreviation
+  const renderColumn = (value, width, isInfo = false) => {
+    if (!value) return <span className="table-typing">-</span>;
+    
+    // For regular columns, just return the value without truncation
+    return <span className="table-typing">{value}</span>;
+  };
+
+  // Function to render price/balance with inline dollar sign
+  const renderCurrency = (value) => {
+    if (!value) return <span className="table-typing">-</span>;
+    
+    return <span className="table-typing currency-value">${value}</span>;
+  };
+
   return (
-    <div className="container">
-      {/* Display selected filters as tags */}
-      <div className="flex flex-row bg-none border-gray-300 rounded-md shadow-sm gap-3">
-        {selectedFilters.map(filter => (
-          <span key={filter} className="bg-green-700 p-2 border-green-300 rounded-md shadow-sm">
-            {filter} <button onClick={() => removeFilter(filter)}>x</button>
-          </span>
-        ))}
-      </div>
-      {/* Advanced search */}
-      <div className="flex items-center justify-center p-4 bg-none mb-3 shadow rounded-lg">
-        <div className="flex items-center">
-          <select
-            className="form-select block w-full mt-1 bg-gray-700 p-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            value={selectedTag}
-            onChange={handleTagChange}
-          >
-            <option value="balance">Balance</option>
-            <option value="type">Type</option>
-            <option value="Info">Info</option>
-            <option value="state">State</option>
-            <option value="gender">Gender</option>
-            <option value="dob">DoB</option>
-            <option value="price">Price</option>
-          </select>
+    <div className="bank-list-container">
+      {/* Notification messages */}
+      {(successMessage || errorMessage) && (
+        <div className="notification-container">
+          {successMessage && <div className="success-message">{successMessage}</div>}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
-        <div className="ml-4">
-          {/* Dropdown for search suggestions */}
-          <select
-            className="form-select block w-full mt-1 bg-gray-700 p-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={handleSearchSelect}
-          >
-            <option value="">Search</option>
-            {filteredBanks
-              .map(bank => bank[selectedTag])
-              .filter((value, index, self) => self.indexOf(value) === index) // Remove duplicates
-              .map(value => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-          </select>
+      )}
+      
+      {/* Modern search UI */}
+      <div className="search-container">
+        <div className="search-filter-tags">
+          {selectedFilters.map(filter => (
+            <div key={filter} className="filter-tag">
+              <span>{filter}</span>
+              <button onClick={() => removeFilter(filter)} className="remove-filter">×</button>
+            </div>
+          ))}
+        </div>
+        
+        <div className="search-inputs">
+          <div className="search-field">
+            <select
+              className="category-select"
+              value={selectedTag}
+              onChange={handleTagChange}
+            >
+              <option value="balance">Balance</option>
+              <option value="price">Price</option>
+              <option value="state">State</option>
+              <option value="dob">DoB</option>
+              <option value="gender">Gender</option>
+              <option value="type">Type</option>
+              <option value="Info">Info</option>
+            </select>
+            
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                className="search-input"
+                placeholder={`Search by ${selectedTag}...`}
+                value={searchInput}
+                onChange={handleSearchInputChange}
+                onFocus={() => searchInput.length > 0 && setShowDropdown(true)}
+              />
+              <span className="search-icon">🔍</span>
+              
+              {showDropdown && dropdownOptions.length > 0 && (
+                <div className="search-dropdown">
+                  {dropdownOptions
+                    .filter(option => option && option.toString().toLowerCase().includes(searchInput.toLowerCase()))
+                    .slice(0, 10) // Limit to 10 options for better UX
+                    .map((option, index) => (
+                      <div 
+                        key={index} 
+                        className="dropdown-option"
+                        onClick={() => handleOptionSelect(option)}
+                      >
+                        {option}
+                      </div>
+                    ))
+                  }
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      {successMessage && <div className="success-message">{successMessage}</div>}
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-4 py-2">Balance</th>
-            <th className="px-4 py-2">Type</th>
-            <th className="px-4 py-2">Info</th>
-            <th className="px-4 py-2">State</th>
-            <th className="px-4 py-2">Gender</th>
-            <th className="px-4 py-2">DoB</th>
-            <th className="px-4 py-2">Price</th>
-            <th className="px-4 py-2"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredBanks.map((bank, index) => (
-            <tr key={bank.id} className={`typing-row-${index + 1} border-t`}>
-              <td className="px-4 py-2"><span className="table-typing">${bank.balance}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.type}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.Info}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.state}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.gender}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{bank.dob}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">${bank.price.toFixed(2)}</span></td>
-              <td className="px-4 py-2">
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={loadingBankId === bank.id}
-                  onClick={(event) => handleBuy(bank.id, event)}
-                >
-                  {loadingBankId === bank.id ? <div className="loader"></div> : 'Buy'}
-                </button>
-              </td>
+      {/* Responsive table with fixed Buy column */}
+      <div className="bank-table-container">
+        <table className="bank-table">
+          <thead>
+            <tr>
+              <th>Balance</th>
+              <th>Price</th>
+              <th>State</th>
+              <th className="hide-mobile">DoB</th>
+              <th className="hide-mobile">Gender</th>
+              <th className="hide-mobile">Type</th>
+              <th className="hide-mobile info-col">Info</th>
+              <th className="action-col">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredBanks.length === 0 ? (
+              <tr>
+                <td colSpan="8" className="no-results">No banks found matching your search criteria</td>
+              </tr>
+            ) : (
+              filteredBanks.map((bank, index) => (
+                <tr key={bank.id} className={`typing-row-${index % 3 + 1} border-t`}>
+                  <td>{renderCurrency(bank.balance)}</td>
+                  <td>{renderCurrency(bank.price?.toFixed(2))}</td>
+                  <td>{renderColumn(bank.state)}</td>
+                  <td className="hide-mobile">{renderColumn(bank.dob)}</td>
+                  <td className="hide-mobile">{renderColumn(bank.gender)}</td>
+                  <td className="hide-mobile">{renderColumn(bank.type)}</td>
+                  <td className="hide-mobile info-col">{renderColumn(bank.Info)}</td>
+                  <td className="action-col">
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={loadingBankId === bank.id}
+                      onClick={(event) => handleBuy(bank.id, event)}
+                    >
+                      {loadingBankId === bank.id ? <div className="loader"></div> : 'Buy'}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

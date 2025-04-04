@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import "./BankList.css";
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { paymentService } from '../services/api';
+import { useBalanceContext } from '../context/BalanceContext';
 
 const CardList = ({ banks }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loadingBankId, setLoadingBankId] = useState(null); // State to track the loading bank ID
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const { updateBalanceAfterTransaction } = useBalanceContext();
   const [selectedTag, setSelectedTag] = useState('base');
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filteredBanks, setFilteredBanks] = useState(banks);
+
+  // Memoize the filterData function to prevent unnecessary recreations
+  const filterData = useCallback((filters) => {
+    let filtered = banks;
+    filters.forEach(filter => {
+      const [tag, value] = filter.split(':');
+      filtered = filtered.filter(bank => bank[tag]?.toString().includes(value));
+    });
+    setFilteredBanks(filtered);
+  }, [banks]);
+
+  // Apply filters when they change
+  useEffect(() => {
+    filterData(selectedFilters);
+  }, [selectedFilters, filterData]);
 
   const handleTagChange = (event) => {
     setSelectedTag(event.target.value);
@@ -24,45 +40,42 @@ const CardList = ({ banks }) => {
       if (!selectedFilters.includes(newFilter)) {
         const updatedFilters = [...selectedFilters, newFilter];
         setSelectedFilters(updatedFilters);
-        filterData(updatedFilters);
       }
     }
-  };
-
-  const filterData = (filters) => {
-    let filtered = banks;
-    filters.forEach(filter => {
-      const [tag, value] = filter.split(':');
-      filtered = filtered.filter(bank => bank[tag].toString().includes(value));
-    });
-    setFilteredBanks(filtered);
   };
 
   const removeFilter = (filterToRemove) => {
     const updatedFilters = selectedFilters.filter(filter => filter !== filterToRemove);
     setSelectedFilters(updatedFilters);
-    filterData(updatedFilters);
   };
 
   const handleBuy = async (bankId, event) => {
     event.preventDefault();
     setLoadingBankId(bankId); // Set the loading bank ID
-    // Implement buying bank here
+    setErrorMessage('');
+    setSuccessMessage('');
+    
     try {
-      const response = await axios.post(`https://matrix-backend-henna.vercel.app/pay/buy/${bankId}/`, {}, { headers: { Authorization: `Token ${token}` } });
+      const response = await paymentService.buyItem(bankId);
       setSuccessMessage('Purchase successful');
-      console.log('Bank purchased', response.data);
+      
+      // Update balance if returned in response
+      if (response.data.balance !== undefined) {
+        updateBalanceAfterTransaction(response.data.balance);
+      }
+      
+      // Use a safer approach to navigation
       setTimeout(() => {
         navigate('/banks/extraction');
-        window.location.reload();
-      } ,2000);
-
+      }, 2000);
     } catch (error) {
       console.error('Failed to buy bank', error);
       setErrorMessage(error.response?.data?.message || 'An error occurred');
     } finally {
       setLoadingBankId(null); // Reset the loading bank ID
     }
+    
+    // Clear messages after 5 seconds
     setTimeout(() => {
       setErrorMessage('');
       setSuccessMessage('');

@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { dataService, paymentService } from '../services/api';
+import { useBalanceContext } from '../context/BalanceContext';
 
 const DumpsList = ({ banks }) => {
   const [selectedTag, setSelectedTag] = useState('balance');
@@ -10,11 +11,22 @@ const DumpsList = ({ banks }) => {
   const [successMessage, setSuccessMessage] = useState('');
   const [loadingDumpId, setLoadingDumpId] = useState(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem('token');
+  const { updateBalanceAfterTransaction } = useBalanceContext();
 
+  // Memoize the filterData function to prevent unnecessary recreations
+  const filterData = useCallback((filters) => {
+    let filtered = banks;
+    filters.forEach(filter => {
+      const [tag, value] = filter.split(':');
+      filtered = filtered.filter(dump => dump[tag]?.toString().includes(value));
+    });
+    setFilteredDumps(filtered);
+  }, [banks]);
+
+  // Fix the dependency array to include filterData
   useEffect(() => {
     filterData(selectedFilters);
-  }, [banks, selectedFilters]);
+  }, [selectedFilters, filterData]);
 
   const handleTagChange = (event) => {
     setSelectedTag(event.target.value);
@@ -31,15 +43,6 @@ const DumpsList = ({ banks }) => {
     }
   };
 
-  const filterData = (filters) => {
-    let filtered = banks;
-    filters.forEach(filter => {
-      const [tag, value] = filter.split(':');
-      filtered = filtered.filter(dump => dump[tag]?.toString().includes(value));
-    });
-    setFilteredDumps(filtered);
-  };
-
   const removeFilter = (filterToRemove) => {
     const updatedFilters = selectedFilters.filter(filter => filter !== filterToRemove);
     setSelectedFilters(updatedFilters);
@@ -48,13 +51,21 @@ const DumpsList = ({ banks }) => {
   const handleBuy = async (dumpId, event) => {
     event.preventDefault();
     setLoadingDumpId(dumpId);
+    setErrorMessage('');
+    setSuccessMessage('');
+    
     try {
-      const response = await axios.post(`https://matrix-backend-henna.vercel.app/pay/buy/${dumpId}/`, {}, { headers: { Authorization: `Token ${token}` } });
+      const response = await paymentService.buyItem(dumpId);
       setSuccessMessage('Purchase successful');
-      console.log('Dump purchased', response.data);
+      
+      // Update balance if returned in response
+      if (response.data.balance !== undefined) {
+        updateBalanceAfterTransaction(response.data.balance);
+      }
+      
+      // Use a safer approach for navigation without full page reload
       setTimeout(() => {
         navigate('/dumps/extraction');
-        window.location.reload();
       }, 2000);
     } catch (error) {
       console.error('Failed to buy dump', error);
@@ -62,6 +73,8 @@ const DumpsList = ({ banks }) => {
     } finally {
       setLoadingDumpId(null);
     }
+    
+    // Clear messages after 5 seconds
     setTimeout(() => {
       setErrorMessage('');
       setSuccessMessage('');

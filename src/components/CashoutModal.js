@@ -1,6 +1,7 @@
 // CashoutModal.js
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { paymentService } from '../services/api';
+import { useBalanceContext } from '../context/BalanceContext';
 import './CashoutModal.css'; // Import the CSS for styling
 
 const CashoutModal = ({ isOpen, onClose }) => {
@@ -12,7 +13,10 @@ const CashoutModal = ({ isOpen, onClose }) => {
   const [error, setError] = useState(null);
   const [cashoutMessage, setCashoutMessage] = useState('');
   const [deduction, setDeduction] = useState(null);
-  const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Use our balance context to access and update balance
+  const { updateBalanceAfterTransaction } = useBalanceContext();
 
   useEffect(() => {
     if (step === 5) {
@@ -37,66 +41,72 @@ const CashoutModal = ({ isOpen, onClose }) => {
 
   const handleNextStep = async () => {
     if (step === 3) {
-      // Call the API when proceeding from amount step
+      // Validate inputs before proceeding
+      if (!senderAddress || !recipientAddress || !amount) {
+        setError('Please fill in all fields');
+        return;
+      }
+      
+      setIsSubmitting(true);
+      setError(null);
+      
       try {
-        const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/buy-btc/', {
-          headers: {
-            'Authorization': `Token ${token}`
-          },
-          params: {
-            amount: parseFloat(amount),
-            address:recipientAddress,
-            senderAddress,
-          },
+        // Use our API service
+        const response = await paymentService.getBtcPreview({
+          amount: parseFloat(amount),
+          address: recipientAddress,
+          senderAddress,
         });
 
-        console.log('GET request sent to /pay/buy-btc/', response.data);
-
-        if (response.status === 200) {
-          setDeduction(response.data.deduction); // Assuming 'deduction' is the key in the response
-          setStep(step + 1);
-        } else {
-          setError('Failed to fetch payment details. Please try again.');
-        }
+        setDeduction(response.data.deduction); // Get deduction from response
+        setStep(step + 1);
       } catch (err) {
         console.error('Error fetching payment details:', err);
-        setError('An error occurred while fetching payment details.');
+        setError(err.response?.data?.message || 'An error occurred while fetching payment details.');
+      } finally {
+        setIsSubmitting(false);
       }
     } else if (step < 5) {
+      // Validate current step inputs
+      if (step === 1 && !senderAddress) {
+        setError('Please enter sender address');
+        return;
+      }
+      if (step === 2 && !recipientAddress) {
+        setError('Please enter recipient address');
+        return;
+      }
+      
+      setError(null);
       setStep(step + 1);
     }
   };
 
   const handlePay = async () => {
     // Handle payment confirmation
-        try {
-      // Debugging: Log the token to ensure it's set
-      console.log('Token:', token);
+    setIsSubmitting(true);
+    setError(null);
     
-      const response = await axios.post('https://matrix-backend-henna.vercel.app/pay/buy-btc/', {
+    try {
+      // Use our API service for the payment
+      const response = await paymentService.buyBtc({
         amount: parseFloat(amount),
         address: recipientAddress,
         senderAddress,
-      }, {
-        headers: {
-          'Authorization': `Token ${token}`
-        },
       });
-    
-      // Debugging: Log the headers to ensure the token is included
-      console.log('Request Headers:', response.config.headers);
-    
-      console.log('POST request sent to /pay/buy-btc/', response.data);
-    
-      if (response.status === 200) {
-        setStep(step + 1); // Proceed to progress bar step
-      } else {
-        setError('Payment failed. Please try again.');
+      
+      if (response.data.balance !== undefined) {
+        // Update the balance using our context
+        updateBalanceAfterTransaction(response.data.balance);
       }
+      
+      setStep(step + 1); // Proceed to progress bar step
     } catch (error) {
-      console.error('Error during POST request:', error);
-      setError('Payment failed. Please try again.');
-    } 
+      console.error('Error during payment:', error);
+      setError(error.response?.data?.message || 'Payment failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleRestart = () => {
@@ -110,10 +120,15 @@ const CashoutModal = ({ isOpen, onClose }) => {
     setDeduction(null);
   };
 
-  return isOpen ? (
+  if (!isOpen) return null;
+
+  return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>Cashout BTC</h2>
+        
+        {error && <p className="error-message">{error}</p>}
+        
         {step === 1 && (
           <div className="input-group">
             <p>Step 1: Enter the address you want to receive from:</p>
@@ -123,12 +138,18 @@ const CashoutModal = ({ isOpen, onClose }) => {
               value={senderAddress}
               onChange={(e) => setSenderAddress(e.target.value)}
               placeholder="Sender Address"
+              disabled={isSubmitting}
             />
-            <button className="next" onClick={handleNextStep}>
-              Next
+            <button 
+              className="next" 
+              onClick={handleNextStep}
+              disabled={isSubmitting || !senderAddress}
+            >
+              {isSubmitting ? 'Processing...' : 'Next'}
             </button>
           </div>
         )}
+        
         {step === 2 && (
           <div className="input-group">
             <p>Step 2: Enter your recipient address:</p>
@@ -138,12 +159,18 @@ const CashoutModal = ({ isOpen, onClose }) => {
               value={recipientAddress}
               onChange={(e) => setRecipientAddress(e.target.value)}
               placeholder="Recipient Address"
+              disabled={isSubmitting}
             />
-            <button className="next" onClick={handleNextStep}>
-              Next
+            <button 
+              className="next" 
+              onClick={handleNextStep}
+              disabled={isSubmitting || !recipientAddress}
+            >
+              {isSubmitting ? 'Processing...' : 'Next'}
             </button>
           </div>
         )}
+        
         {step === 3 && (
           <div className="input-group">
             <p>Step 3: Enter the amount you want to cash out:</p>
@@ -153,20 +180,31 @@ const CashoutModal = ({ isOpen, onClose }) => {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               placeholder="Amount"
+              disabled={isSubmitting}
             />
-            <button className="next" onClick={handleNextStep}>
-              Next
+            <button 
+              className="next" 
+              onClick={handleNextStep}
+              disabled={isSubmitting || !amount}
+            >
+              {isSubmitting ? 'Processing...' : 'Next'}
             </button>
           </div>
         )}
+        
         {step === 4 && (
           <div className="input-group">
             <p>Amount to be paid: {deduction}</p>
-            <button className="next" onClick={handlePay}>
-              Pay
+            <button 
+              className="next" 
+              onClick={handlePay}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Processing...' : 'Pay'}
             </button>
           </div>
         )}
+        
         {step === 5 && (
           <div>
             <p>Processing Cashout...</p>
@@ -174,20 +212,21 @@ const CashoutModal = ({ isOpen, onClose }) => {
               <div className="progress" style={{ width: `${progress}%` }}></div>
             </div>
             {cashoutMessage && <p className="success-message">{cashoutMessage}</p>}
-            {error && <p className="error">{error}</p>}
           </div>
         )}
+        
         {error && (
           <button className="next-r" onClick={handleRestart}>
             Restart
           </button>
         )}
+        
         <button className="btn-close" onClick={onClose}>
           Close
         </button>
       </div>
     </div>
-  ) : null;
+  );
 };
 
 export default CashoutModal;
