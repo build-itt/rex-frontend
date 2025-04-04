@@ -4,7 +4,7 @@ import './Sidebar.css';
 import CashoutModal from './CashoutModal';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp, faCreditCard, faTerminal, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
 import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
@@ -14,6 +14,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const [banksByLocation, setBanksByLocation] = useState({});
   const [isCashoutModalOpen, setIsCashoutModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +51,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+    if (copySuccess) setCopySuccess(false);
   };
   const toggleCashoutModal = () => {
     setIsCashoutModalOpen(!isCashoutModalOpen);
@@ -80,6 +82,17 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
 
   const handleDropdownClick = (location) => {
     setActiveDropdown(activeDropdown === location ? null : location);
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(bitcoinAddress)
+      .then(() => {
+        setCopySuccess(true);
+        setTimeout(() => setCopySuccess(false), 2000);
+      })
+      .catch(err => {
+        console.error('Failed to copy address: ', err);
+      });
   };
 
   return (
@@ -148,19 +161,28 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
       {isModalOpen && (
         <div className="modal-overlay" onClick={toggleModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h2>Bitcoin Deposit Address</h2>
-            <p>This is your Bitcoin deposit address, send only Bitcoin to this address. Sending any other token will result in loss of assets.</p>
+            <h2><FontAwesomeIcon icon={faTerminal} /> Bitcoin Deposit</h2>
+            <p>Send Bitcoin only to this address. Any other crypto will result in permanent loss.</p>
             <div className="qr-code">
               {isLoading ? (
                 <p>Loading QR Code...</p>
               ) : (
-                <QRCode value={bitcoinAddress} size={256} bgColor={"#1f1f1f"} fgColor={"#ffffff"} />
+                <QRCode value={bitcoinAddress} size={256} bgColor={"#111"} fgColor={"#1bba1b"} />
               )}
             </div>
-            <p className="bitcoin-address">{isLoading ? 'Loading address...' : bitcoinAddress}</p>
-            <p>Payments can take hours to confirm, do not panic when such happens. If after 24 hours of payment there is no reflection, contact support.</p>
+            <div className="bitcoin-address">
+              {isLoading ? 'Loading address...' : bitcoinAddress}
+              <button 
+                className="copy-btn" 
+                onClick={copyToClipboard}
+                disabled={isLoading}
+              >
+                {copySuccess ? <><FontAwesomeIcon icon={faCheck} /> Copied</> : <><FontAwesomeIcon icon={faCopy} /> Copy</>}
+              </button>
+            </div>
+            <p>Payments typically confirm within 1-3 hours. Allow up to 24 hours before contacting support.</p>
             <div className="modal-actions">
-              <button className="btn-close" onClick={toggleModal}>Close</button>
+              <button className="btn-close" onClick={toggleModal}>Close Terminal</button>
             </div>
           </div>
         </div>

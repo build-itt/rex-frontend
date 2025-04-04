@@ -1,110 +1,299 @@
 .topbar {
-    background: none;
-    height: 60px;
+    background: rgba(0, 0, 0, 0.7);
+    height: 45px;
     display: flex;
     align-items: center;
-    flex-direction: row;
-    gap: 20px;
     padding: 0 20px;
-    border-radius: 7px;
-    justify-content: space-evenly;
+    border-radius: 30px;
+    justify-content: center;
     box-shadow: 0 0 15px rgba(255, 0, 127, 0.7);
     position: fixed;
-    top: 0;
+    top: 10px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 100;
+    width: auto;
+    max-width: 320px;
+    transition: all 0.3s ease;
+}
+
+.topbar-buttons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-link {
+    transition: all 0.2s ease;
 }
 
 .glassy {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 8px 16px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: none;
+    border-radius: 50%;
+    padding: 10px;
     color: #f5f5f5;
-    margin-right: 20px;
     display: flex;
-    gap: 10px;
     align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.glassy:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.glassy-m {
+    background: none;
+    color: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
 }
-.glassy-m{
+
+.glassy-m:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background-color: #0a0a0a;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 0 15px rgba(0, 150, 0, 0.3);
+    color: #b3b3b3;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+.modal-content h2 {
+    color: #1bba1b;
+    margin-bottom: 15px;
+    font-family: monospace;
+    letter-spacing: 1px;
+}
+
+.modal-content p {
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #888;
+}
+
+.qr-code {
+    margin: 25px 0;
+    display: flex;
+    justify-content: center;
+    background: #111;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px dashed #333;
+}
+
+.bitcoin-address {
+    background: #111;
+    padding: 15px;
+    border-radius: 4px;
+    font-family: monospace;
+    word-break: break-all;
+    margin: 15px 0;
+    font-size: 13px;
+    color: #1bba1b;
+    position: relative;
+    text-align: left;
+    border: 1px solid #333;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #222;
+    color: #1bba1b;
+    border: 1px solid #333;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+    background: #333;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn-close {
+    background: #111;
+    color: #888;
+    border: 1px solid #333;
+    padding: 10px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: monospace;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.btn-close:hover {
+    background: #222;
+    color: #1bba1b;
+}
+
+.topbar-icon {
+    display: inline-block;
+    font-size: 1.2rem;
+}
+
+.nav-text {
     display: none;
 }
-.glassy:hover {
-    background: rgba(255, 255, 255, 0.2);
+
+.mobile-only {
+    display: none;
 }
 
-.balance {
-    background-color: #ff007f;
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-weight: bold;
+.desktop-only {
+    display: flex;
 }
 
+/* Large Desktops */
 @media screen and (max-width: 1200px) {
     .topbar {
-        width: calc(90% - 40px);
+        max-width: 300px;
     }
 }
 
+/* Regular Desktops and Laptops */
 @media screen and (max-width: 992px) {
     .topbar {
-        width: calc(95% - 40px);
+        max-width: 280px;
+    }
+    
+    .topbar-buttons {
+        gap: 18px;
     }
 }
 
+/* Tablets */
 @media screen and (max-width: 768px) {
     .topbar {
-        width: 100%;
-        left: 0;
-        transform: none;
-        border-radius: 0;
-        padding: 0 10px;
+        max-width: 250px;
+        height: 42px;
     }
-    .glassy {
-        margin-right: 0;
+    
+    .topbar-buttons {
+        gap: 15px;
     }
-    .balance {
-        padding: 8px 12px;
+    
+    .topbar-icon {
+        font-size: 1.1rem;
     }
 }
 
-@media screen and (max-width: 1090px) {
+/* Mobile Phones - Show only balance */
+@media screen and (max-width: 576px) {
     .topbar {
-        flex-direction: column;
-        width: 100%;
-        box-shadow: none;
-        height: auto;
-        padding: 10px;
+        max-width: 160px;
+        height: 40px;
+        padding: 0 15px;
     }
-    .glassy {
-        width: 100%;
-        justify-content: center;
-        margin-bottom: 10px;
+    
+    .desktop-only {
         display: none;
     }
-    .glassy-m{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 16px;
-        border-radius: 25px;
-        font-weight: bold;
-        background: rgba(255, 255, 255, 0.1);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        color: #f5f5f5;
+    
+    .mobile-only {
+        display: block;
     }
-    .balance {
-        width: 100%;
-        text-align: center;
+    
+    /* Adjust modal for mobile */
+    .modal-content {
+        width: 90%;
+        padding: 20px 15px;
+        margin: 15px;
+        position: relative;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .modal-content h2 {
+        font-size: 18px;
+    }
+    
+    .modal-content p {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+    
+    .qr-code {
+        margin: 15px 0;
+        padding: 10px;
+    }
+    
+    .qr-code canvas {
+        width: 180px !important;
+        height: 180px !important;
+    }
+    
+    .bitcoin-address {
+        padding: 12px;
+        font-size: 11px;
+        padding-right: 60px;
+    }
+    
+    .copy-btn {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+    
+    .btn-close {
+        padding: 8px 20px;
+        font-size: 12px;
+    }
+}
+
+/* Extra Small Devices */
+@media screen and (max-width: 380px) {
+    .topbar {
+        max-width: 140px;
+        height: 36px;
+        top: 7px;
+        padding: 0 12px;
+    }
+    
+    .qr-code canvas {
+        width: 150px !important;
+        height: 150px !important;
     }
 }

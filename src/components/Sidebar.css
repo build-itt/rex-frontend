@@ -104,74 +104,115 @@
   align-items: center;
   justify-content: center !important;
   z-index: 1001;
-  animation: fadeIn 0.5s ease;
+  animation: fadeIn 0.3s ease;
+  backdrop-filter: blur(3px);
 }
 
 /* Modal Content */
 .modal-content {
-  background: #2a2a2a;
-  border: 1px solid #ff007f;
-  padding: 20px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  padding: 25px;
   width: 90%;
   max-width: 500px;
   text-align: center;
-  border-radius: 10px;
-  box-shadow: 0 0 20px #ff007f;
-  animation: slideUp 0.5s ease;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 150, 0, 0.3);
+  animation: slideUp 0.3s ease;
   z-index: 1002;
+  color: #b3b3b3;
 }
 
 /* Modal Headings and Text */
 .modal-content h2 {
-  color: #ff007f;
-  margin-bottom: 20px;
-  text-shadow: 0 0 10px #ff007f;
+  color: #1bba1b;
+  margin-bottom: 15px;
+  font-family: monospace;
+  letter-spacing: 1px;
+  text-shadow: none;
 }
 
 .modal-content p {
-  color: #ffffff;
-  margin-bottom: 20px;
+  color: #888;
+  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 /* QR Code Styling */
 .qr-code {
-  margin: 20px 0;
-  padding: 10px;
-  background-color: #1f1f1f;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #ff007f;
+  margin: 25px 0;
+  padding: 15px;
+  background: #111;
+  border-radius: 4px;
+  border: 1px dashed #333;
+  box-shadow: none;
   display: flex;
   justify-content: center;
 }
 
 /* Bitcoin Address */
 .bitcoin-address {
-  color: #ff007f !important;
-  font-size: 1.2rem;
+  background: #111;
+  padding: 15px;
+  border-radius: 4px;
+  font-family: monospace;
   word-break: break-all;
-  margin-bottom: 20px;
+  margin: 15px 0;
+  font-size: 13px;
+  color: #1bba1b;
+  position: relative;
+  text-align: left;
+  border: 1px solid #333;
+}
+
+/* Copy button */
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #222;
+  color: #1bba1b;
+  border: 1px solid #333;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: monospace;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  background: #333;
 }
 
 /* Modal Actions */
 .modal-actions {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 /* Buttons */
 .btn-close {
-  background-color: #ff007f;
-  color: white;
-  border: none;
-  padding: 10px 20px;
+  background: #111;
+  color: #888;
+  border: 1px solid #333;
+  padding: 10px 25px;
+  border-radius: 4px;
   cursor: pointer;
-  border-radius: 5px;
-  transition: transform 0.5s ease;
+  font-family: monospace;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 13px;
 }
 
 .btn-close:hover {
-  transform: scale(1.1);
+  background: #222;
+  color: #1bba1b;
+  transform: none;
 }
-
 
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -179,12 +220,65 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(50px); opacity: 0; }
+  from { transform: translateY(30px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* Media queries for mobile devices */
+@media (max-width: 576px) {
+  .modal-content {
+    width: 90%;
+    padding: 20px 15px;
+    margin: 15px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .modal-content h2 {
+    font-size: 18px;
+  }
+  
+  .modal-content p {
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  
+  .qr-code {
+    margin: 15px 0;
+    padding: 10px;
+  }
+  
+  .qr-code canvas {
+    width: 180px !important;
+    height: 180px !important;
+  }
+  
+  .bitcoin-address {
+    padding: 12px;
+    font-size: 11px;
+    padding-right: 60px;
+  }
+  
+  .copy-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+  
+  .btn-close {
+    padding: 8px 20px;
+    font-size: 12px;
+  }
+}
 
-  @media (max-width: 1090px) {
+@media (max-width: 380px) {
+  .qr-code canvas {
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
+
+@media (max-width: 1090px) {
     .sidebar {
       position: absolute;
       transform: translateX(-250px);
