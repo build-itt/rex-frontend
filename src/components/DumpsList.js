@@ -49,7 +49,7 @@ const DumpsList = ({ banks }) => {
     event.preventDefault();
     setLoadingDumpId(dumpId);
     try {
-      const response = await axios.post(`https://matrix-backend-orcin.vercel.app/pay/buy/${dumpId}/`, {}, { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.post(`https://matrix-backend-henna.vercel.app/pay/buy/${dumpId}/`, {}, { headers: { Authorization: `Token ${token}` } });
       setSuccessMessage('Purchase successful');
       console.log('Dump purchased', response.data);
       setTimeout(() => {

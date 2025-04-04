@@ -21,7 +21,7 @@ export default function CommentSectionComponent() {
   const fetchComments = useCallback(async () => {
     try {
       setLoadingComments(true);  // Start loading
-      const response = await axios.get(`https://matrix-backend-orcin.vercel.app/store/comments/`, {
+      const response = await axios.get(`https://matrix-backend-henna.vercel.app/store/comments/`, {
         params: { page: currentPage, limit: commentsPerPage }
       });
       
@@ -57,7 +57,7 @@ export default function CommentSectionComponent() {
     try {
       setLoading(true);
       const response = await axios.post(
-        'https://matrix-backend-orcin.vercel.app/store/create-comment/',
+        'https://matrix-backend-henna.vercel.app/store/create-comment/',
         formData,
         {
           headers: {
@@ -90,7 +90,7 @@ export default function CommentSectionComponent() {
   const handleDeleteComment = async (commentId) => {
     try {
       setDeletingCommentId(commentId); // Set the ID of the comment being deleted
-      await axios.delete(`https://matrix-backend-orcin.vercel.app/store/delete-comment/${commentId}/`, {
+      await axios.delete(`https://matrix-backend-henna.vercel.app/store/delete-comment/${commentId}/`, {
         headers: {
           'Authorization': `Token ${token}`,
         },

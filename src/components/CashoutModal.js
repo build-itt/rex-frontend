@@ -39,7 +39,7 @@ const CashoutModal = ({ isOpen, onClose }) => {
     if (step === 3) {
       // Call the API when proceeding from amount step
       try {
-        const response = await axios.get('https://matrix-backend-orcin.vercel.app/pay/buy-btc/', {
+        const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/buy-btc/', {
           headers: {
             'Authorization': `Token ${token}`
           },
@@ -73,7 +73,7 @@ const CashoutModal = ({ isOpen, onClose }) => {
       // Debugging: Log the token to ensure it's set
       console.log('Token:', token);
     
-      const response = await axios.post('https://matrix-backend-orcin.vercel.app/pay/buy-btc/', {
+      const response = await axios.post('https://matrix-backend-henna.vercel.app/pay/buy-btc/', {
         amount: parseFloat(amount),
         address: recipientAddress,
         senderAddress,

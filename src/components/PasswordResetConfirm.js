@@ -25,7 +25,7 @@ const PasswordResetConfirm = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('https://matrix-backend-orcin.vercel.app/account/passwordreset/confirm/', {
+      const response = await axios.post('https://matrix-backend-henna.vercel.app/account/passwordreset/confirm/', {
         token,
         password,
       });

@@ -16,7 +16,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     setMessage('');
 
     try {
-      const response = await axios.post('https://matrix-backend-orcin.vercel.app/account/password/reset/', { email });
+      const response = await axios.post('https://matrix-backend-henna.vercel.app/account/password/reset/', { email });
       if (response.status === 200) {
         setMessage('Password reset link sent to your email.');
       }
