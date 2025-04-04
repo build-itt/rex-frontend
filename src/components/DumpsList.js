@@ -2,23 +2,49 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { dataService, paymentService } from '../services/api';
 import { useBalanceContext } from '../context/BalanceContext';
+import "./BankList.css";
 
 const DumpsList = ({ banks }) => {
   const [selectedTag, setSelectedTag] = useState('balance');
+  const [searchInput, setSearchInput] = useState('');
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filteredDumps, setFilteredDumps] = useState(banks);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loadingDumpId, setLoadingDumpId] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownOptions, setDropdownOptions] = useState([]);
   const navigate = useNavigate();
   const { updateBalanceAfterTransaction } = useBalanceContext();
+
+  // Initialize filtered banks when component mounts or banks changes
+  useEffect(() => {
+    setFilteredDumps(banks);
+    // Update dropdown options when selected tag changes
+    updateDropdownOptions();
+  }, [banks, selectedTag]);
+
+  const updateDropdownOptions = () => {
+    if (!banks || !banks.length) return;
+    
+    // Get unique values for the selected tag
+    const options = [...new Set(banks
+      .map(dump => dump[selectedTag])
+      .filter(Boolean)
+    )];
+    
+    setDropdownOptions(options);
+  };
 
   // Memoize the filterData function to prevent unnecessary recreations
   const filterData = useCallback((filters) => {
     let filtered = banks;
     filters.forEach(filter => {
       const [tag, value] = filter.split(':');
-      filtered = filtered.filter(dump => dump[tag]?.toString().includes(value));
+      filtered = filtered.filter(dump => {
+        const dumpValue = dump[tag];
+        return dumpValue && dumpValue.toString().toLowerCase().includes(value.toLowerCase());
+      });
     });
     setFilteredDumps(filtered);
   }, [banks]);
@@ -30,22 +56,38 @@ const DumpsList = ({ banks }) => {
 
   const handleTagChange = (event) => {
     setSelectedTag(event.target.value);
+    setSearchInput('');
+    setShowDropdown(false);
   };
 
-  const handleSearchSelect = (event) => {
+  const handleSearchInputChange = (event) => {
     const value = event.target.value;
+    setSearchInput(value);
+    
+    if (value.length > 0) {
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleOptionSelect = (value) => {
     if (value) {
       const newFilter = `${selectedTag}:${value}`;
       if (!selectedFilters.includes(newFilter)) {
         const updatedFilters = [...selectedFilters, newFilter];
         setSelectedFilters(updatedFilters);
+        filterData(updatedFilters);
       }
     }
+    setSearchInput('');
+    setShowDropdown(false);
   };
 
   const removeFilter = (filterToRemove) => {
     const updatedFilters = selectedFilters.filter(filter => filter !== filterToRemove);
     setSelectedFilters(updatedFilters);
+    filterData(updatedFilters);
   };
 
   const handleBuy = async (dumpId, event) => {
@@ -81,79 +123,148 @@ const DumpsList = ({ banks }) => {
     }, 5000);
   };
 
-  return (
-    <div className="container mx-auto px-4">
-      <h1 className="text-2xl font-bold mb-4">Dumps Listings</h1>
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      {successMessage && <div className="success-message">{successMessage}</div>}
-      <div className="flex flex-row bg-none border-gray-300 rounded-md shadow-sm gap-3">
-        {selectedFilters.map(filter => (
-          <span key={filter} className="bg-green-700 p-2 border-green-300 rounded-md shadow-sm">
-            {filter} <button onClick={() => removeFilter(filter)}>x</button>
-          </span>
-        ))}
-      </div>
-      
+  // Function to render column with possible abbreviation
+  const renderColumn = (value) => {
+    if (!value) return <span className="table-typing">-</span>;
+    return <span className="table-typing">{value}</span>;
+  };
 
-      <div className="flex items-center justify-center p-4 bg-none mb-3 shadow rounded-lg">
-        <div className="flex items-center">
-          <select
-            className="form-select block w-full mt-1 bg-gray-700 p-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            value={selectedTag}
-            onChange={handleTagChange}
-          >
-            <option value="balance">Balance</option>
-            <option value="Info">Info</option>
-            <option value="price">Price</option>
-          </select>
+  // Function to render price/balance with inline dollar sign
+  const renderCurrency = (value) => {
+    if (!value) return <span className="table-typing">-</span>;
+    
+    // Make sure the value is a number before using toFixed
+    const numValue = typeof value === 'number' 
+      ? value.toFixed(2) 
+      : parseFloat(value) ? parseFloat(value).toFixed(2) : value;
+    
+    return <span className="table-typing currency-value">${numValue}</span>;
+  };
+
+  // Determine which columns to show based on screen width
+  const priorityColumns = [
+    { name: 'Balance', field: 'balance', show: true, isCurrency: true },
+    { name: 'Description', field: 'Info', show: true, className: 'info-col' },
+    { name: 'Price', field: 'price', show: true, isCurrency: true }
+  ];
+
+  return (
+    <div className="bank-list-container">
+      {/* Notification messages */}
+      {(successMessage || errorMessage) && (
+        <div className="notification-container">
+          {successMessage && <div className="success-message">{successMessage}</div>}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
-        <div className="ml-4">
-          <select
-            className="form-select block w-full mt-1 bg-gray-700 p-2 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={handleSearchSelect}
-          >
-            <option value="">Search</option>
-            {filteredDumps
-              .map(dump => dump[selectedTag])
-              .filter((value, index, self) => self.indexOf(value) === index)
-              .map(value => (
-                <option key={value} value={value}>
-                  {value}
+      )}
+      
+      {/* Modern search UI */}
+      <div className="search-container">
+        <div className="search-filter-tags">
+          {selectedFilters.map(filter => (
+            <div key={filter} className="filter-tag">
+              <span>{filter}</span>
+              <button onClick={() => removeFilter(filter)} className="remove-filter">×</button>
+            </div>
+          ))}
+        </div>
+        
+        <div className="search-inputs">
+          <div className="search-field">
+            <select
+              className="category-select"
+              value={selectedTag}
+              onChange={handleTagChange}
+            >
+              {priorityColumns.map(column => (
+                <option key={column.field} value={column.field}>
+                  {column.name}
                 </option>
               ))}
-          </select>
+            </select>
+            
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                className="search-input"
+                placeholder={`Search by ${selectedTag}...`}
+                value={searchInput}
+                onChange={handleSearchInputChange}
+                onFocus={() => searchInput.length > 0 && setShowDropdown(true)}
+              />
+              
+              {showDropdown && dropdownOptions.length > 0 && (
+                <div className="search-dropdown">
+                  {dropdownOptions
+                    .filter(option => option && option.toString().toLowerCase().includes(searchInput.toLowerCase()))
+                    .slice(0, 10) // Limit to 10 options for better UX
+                    .map((option, index) => (
+                      <div 
+                        key={index} 
+                        className="dropdown-option"
+                        onClick={() => handleOptionSelect(option)}
+                      >
+                        {option}
+                      </div>
+                    ))
+                  }
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
-      <table className="min-w-full bg-white border border-gray-200">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="px-4 py-2">Balance</th>
-            <th className="px-4 py-2">Description</th>
-            <th className="px-4 py-2">Price</th>
-            <th className="px-4 py-2"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredDumps.map((dump, index) => (
-            <tr key={dump.id} className={`typing-row-${index + 1} border-t`}>
-              <td className="px-4 py-2"><span className="table-typing">${dump.balance}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">{dump.Info}</span></td>
-              <td className="px-4 py-2"><span className="table-typing">${dump.price}</span></td>
-              <td className="px-4 py-2">
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  disabled={loadingDumpId === dump.id}
-                  onClick={(event) => handleBuy(dump.id, event)}
+      {/* Responsive table with fixed Buy column */}
+      <div className="bank-table-container">
+        <table className="bank-table">
+          <thead>
+            <tr>
+              {priorityColumns.map(column => (
+                <th 
+                  key={column.field} 
+                  className={column.className ? column.className : ''}
                 >
-                  {loadingDumpId === dump.id ? <div className="loader"></div> : 'Buy'}
-                </button>
-              </td>
+                  {column.name}
+                </th>
+              ))}
+              <th className="action-col">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {filteredDumps.length === 0 ? (
+              <tr>
+                <td colSpan={priorityColumns.length + 1} className="no-results">No dumps found matching your search criteria</td>
+              </tr>
+            ) : (
+              filteredDumps.map((dump, index) => (
+                <tr key={dump.id} className={`typing-row-${index % 3 + 1} border-t`}>
+                  {priorityColumns.map(column => (
+                    <td 
+                      key={column.field} 
+                      className={column.className ? column.className : ''}
+                    >
+                      {column.isCurrency ? 
+                        renderCurrency(dump[column.field]) : 
+                        renderColumn(dump[column.field])}
+                    </td>
+                  ))}
+                  <td className="action-col">
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      disabled={loadingDumpId === dump.id}
+                      onClick={(event) => handleBuy(dump.id, event)}
+                    >
+                      {loadingDumpId === dump.id ? <div className="loader"></div> : 'Buy'}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

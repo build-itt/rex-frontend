@@ -109,8 +109,7 @@ const BankList = ({ banks }) => {
   // Function to render column with possible abbreviation
   const renderColumn = (value, width, isInfo = false) => {
     if (!value) return <span className="table-typing">-</span>;
-    
-    // For regular columns, just return the value without truncation
+    // No text truncation - show full text
     return <span className="table-typing">{value}</span>;
   };
 
@@ -118,8 +117,24 @@ const BankList = ({ banks }) => {
   const renderCurrency = (value) => {
     if (!value) return <span className="table-typing">-</span>;
     
-    return <span className="table-typing currency-value">${value}</span>;
+    // Make sure the value is a number before using toFixed
+    const numValue = typeof value === 'number' 
+      ? value.toFixed(2) 
+      : parseFloat(value) ? parseFloat(value).toFixed(2) : value;
+    
+    return <span className="table-typing currency-value">${numValue}</span>;
   };
+
+  // Determine which columns to show based on screen width
+  const priorityColumns = [
+    { name: 'Balance', field: 'balance', show: true, isCurrency: true },
+    { name: 'Price', field: 'price', show: true, isCurrency: true },
+    { name: 'State', field: 'state', show: true },
+    { name: 'DoB', field: 'dob', show: true },
+    { name: 'Gender', field: 'gender', show: true },
+    { name: 'Type', field: 'type', show: true },
+    { name: 'Info', field: 'Info', show: true, className: 'info-col', isInfo: true }
+  ];
 
   return (
     <div className="bank-list-container">
@@ -149,13 +164,11 @@ const BankList = ({ banks }) => {
               value={selectedTag}
               onChange={handleTagChange}
             >
-              <option value="balance">Balance</option>
-              <option value="price">Price</option>
-              <option value="state">State</option>
-              <option value="dob">DoB</option>
-              <option value="gender">Gender</option>
-              <option value="type">Type</option>
-              <option value="Info">Info</option>
+              {priorityColumns.map(column => (
+                <option key={column.field} value={column.field}>
+                  {column.name}
+                </option>
+              ))}
             </select>
             
             <div className="search-input-wrapper">
@@ -167,7 +180,6 @@ const BankList = ({ banks }) => {
                 onChange={handleSearchInputChange}
                 onFocus={() => searchInput.length > 0 && setShowDropdown(true)}
               />
-              <span className="search-icon">🔍</span>
               
               {showDropdown && dropdownOptions.length > 0 && (
                 <div className="search-dropdown">
@@ -196,31 +208,41 @@ const BankList = ({ banks }) => {
         <table className="bank-table">
           <thead>
             <tr>
-              <th>Balance</th>
-              <th>Price</th>
-              <th>State</th>
-              <th className="hide-mobile">DoB</th>
-              <th className="hide-mobile">Gender</th>
-              <th className="hide-mobile">Type</th>
-              <th className="hide-mobile info-col">Info</th>
+              {priorityColumns.map(column => (
+                ((column.show === true) || (column.show === 'desktop')) && (
+                  <th 
+                    key={column.field} 
+                    className={(column.show === 'desktop' ? 'hide-mobile' : '') + 
+                      (column.className ? ' ' + column.className : '')}
+                  >
+                    {column.name}
+                  </th>
+                )
+              ))}
               <th className="action-col">Action</th>
             </tr>
           </thead>
           <tbody>
             {filteredBanks.length === 0 ? (
               <tr>
-                <td colSpan="8" className="no-results">No banks found matching your search criteria</td>
+                <td colSpan={priorityColumns.length + 1} className="no-results">No banks found matching your search criteria</td>
               </tr>
             ) : (
               filteredBanks.map((bank, index) => (
                 <tr key={bank.id} className={`typing-row-${index % 3 + 1} border-t`}>
-                  <td>{renderCurrency(bank.balance)}</td>
-                  <td>{renderCurrency(bank.price?.toFixed(2))}</td>
-                  <td>{renderColumn(bank.state)}</td>
-                  <td className="hide-mobile">{renderColumn(bank.dob)}</td>
-                  <td className="hide-mobile">{renderColumn(bank.gender)}</td>
-                  <td className="hide-mobile">{renderColumn(bank.type)}</td>
-                  <td className="hide-mobile info-col">{renderColumn(bank.Info)}</td>
+                  {priorityColumns.map(column => (
+                    ((column.show === true) || (column.show === 'desktop')) && (
+                      <td 
+                        key={column.field} 
+                        className={(column.show === 'desktop' ? 'hide-mobile' : '') + 
+                          (column.className ? ' ' + column.className : '')}
+                      >
+                        {column.isCurrency ? 
+                          renderCurrency(bank[column.field]) : 
+                          renderColumn(bank[column.field], 10, column.isInfo)}
+                      </td>
+                    )
+                  ))}
                   <td className="action-col">
                     <button
                       type="submit"
