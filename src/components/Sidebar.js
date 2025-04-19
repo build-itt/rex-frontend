@@ -98,7 +98,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   return (
     <>
       <div ref={ref} className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
-        <h1 className="sidebar-title">DarkPass</h1>
+        <h1 className="sidebar-title">BlackClub</h1>
         <ul className="menu-items">
           <li className="menu-item active" onClick={() => navigate('/dashboard')}>
             <FontAwesomeIcon icon={faTachometerAlt} /> Dashboard
@@ -140,7 +140,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
               <FontAwesomeIcon icon={faHistory} /> History
             </li>
             <li className="menu-item">
-              <a href="https://t.me/darkpasssupport/" target="_blank" rel="noopener noreferrer">
+              <a href="https://t.me/BlackClubsupport/" target="_blank" rel="noopener noreferrer">
                 <FontAwesomeIcon icon={faHeadset} /> Support
               </a>
             </li>

@@ -65,7 +65,7 @@ function Topbar() {
             <FontAwesomeIcon icon={faHistory} className="topbar-icon" /> 
             <span className="nav-text">History</span>
           </span>
-          <a href="https://t.me/darkpasssupport/" target="_blank" rel="noopener noreferrer" className="nav-link glassy">
+          <a href="https://t.me/BlackClubsupport/" target="_blank" rel="noopener noreferrer" className="nav-link glassy">
             <FontAwesomeIcon icon={faHeadset} className="topbar-icon" /> 
             <span className="nav-text">Support</span>
           </a>
