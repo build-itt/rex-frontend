@@ -106,10 +106,9 @@ const BankList = ({ banks }) => {
     }, 5000);
   };
 
-  // Function to render column with possible abbreviation
-  const renderColumn = (value, width, isInfo = false) => {
+  // Function to render column
+  const renderColumn = (value) => {
     if (!value) return <span className="table-typing">-</span>;
-    // No text truncation - show full text
     return <span className="table-typing">{value}</span>;
   };
 
@@ -125,8 +124,8 @@ const BankList = ({ banks }) => {
     return <span className="table-typing currency-value">${numValue}</span>;
   };
 
-  // Determine which columns to show based on screen width
-  const priorityColumns = [
+  // Initialize display columns (base definition)
+  const baseDisplayColumns = [
     { name: 'Balance', field: 'balance', show: true, isCurrency: true },
     { name: 'Price', field: 'price', show: true, isCurrency: true },
     { name: 'State', field: 'state', show: true },
@@ -135,6 +134,17 @@ const BankList = ({ banks }) => {
     { name: 'Type', field: 'type', show: true },
     { name: 'Info', field: 'Info', show: true, className: 'info-col', isInfo: true }
   ];
+
+  // Determine if the filtered list contains restricted banks
+  const hasRestrictedBanks = filteredBanks.some(bank => {
+    const countryValue = bank?.country?.trim().toLowerCase();
+    return countryValue === 'canada' || countryValue === 'uk';
+  });
+
+  // Create the actual columns to display based on restricted status
+  const actualDisplayColumns = hasRestrictedBanks
+    ? baseDisplayColumns.filter(col => col.field !== 'state' && col.field !== 'dob')
+    : baseDisplayColumns;
 
   return (
     <div className="bank-list-container">
@@ -164,7 +174,7 @@ const BankList = ({ banks }) => {
               value={selectedTag}
               onChange={handleTagChange}
             >
-              {priorityColumns.map(column => (
+              {actualDisplayColumns.map(column => (
                 <option key={column.field} value={column.field}>
                   {column.name}
                 </option>
@@ -203,21 +213,19 @@ const BankList = ({ banks }) => {
         </div>
       </div>
 
-      {/* Responsive table with fixed Buy column */}
+      {/* Responsive table */}
       <div className="bank-table-container">
         <table className="bank-table">
           <thead>
             <tr>
-              {priorityColumns.map(column => (
-                ((column.show === true) || (column.show === 'desktop')) && (
-                  <th 
-                    key={column.field} 
-                    className={(column.show === 'desktop' ? 'hide-mobile' : '') + 
-                      (column.className ? ' ' + column.className : '')}
-                  >
-                    {column.name}
-                  </th>
-                )
+              {actualDisplayColumns.map(column => (
+                <th 
+                  key={column.field} 
+                  className={(column.show === 'desktop' ? 'hide-mobile' : '') + 
+                    (column.className ? ' ' + column.className : '')}
+                >
+                  {column.name}
+                </th>
               ))}
               <th className="action-col">Action</th>
             </tr>
@@ -225,36 +233,39 @@ const BankList = ({ banks }) => {
           <tbody>
             {filteredBanks.length === 0 ? (
               <tr>
-                <td colSpan={priorityColumns.length + 1} className="no-results">No banks found matching your search criteria</td>
+                <td colSpan={actualDisplayColumns.length + 1} className="no-results">No banks found matching your search criteria</td>
               </tr>
             ) : (
-              filteredBanks.map((bank, index) => (
-                <tr key={bank.id} className={`typing-row-${index % 3 + 1} border-t`}>
-                  {priorityColumns.map(column => (
-                    ((column.show === true) || (column.show === 'desktop')) && (
-                      <td 
-                        key={column.field} 
-                        className={(column.show === 'desktop' ? 'hide-mobile' : '') + 
-                          (column.className ? ' ' + column.className : '')}
+              filteredBanks.map((bank, index) => {
+                return (
+                  <tr key={bank.id} className={`typing-row-${index % 3 + 1} border-t`}>
+                    {actualDisplayColumns.map(column => {
+                      return (
+                        <td 
+                          key={column.field} 
+                          className={(column.show === 'desktop' ? 'hide-mobile' : '') + 
+                            (column.className ? ' ' + column.className : '')}
+                        >
+                          {column.isCurrency ? 
+                            renderCurrency(bank[column.field]) : 
+                            renderColumn(bank[column.field])
+                          }
+                        </td>
+                      );
+                    })}
+                    <td className="action-col">
+                      <button
+                        type="submit"
+                        className="btn-primary"
+                        disabled={loadingBankId === bank.id}
+                        onClick={(event) => handleBuy(bank.id, event)}
                       >
-                        {column.isCurrency ? 
-                          renderCurrency(bank[column.field]) : 
-                          renderColumn(bank[column.field], 10, column.isInfo)}
-                      </td>
-                    )
-                  ))}
-                  <td className="action-col">
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                      disabled={loadingBankId === bank.id}
-                      onClick={(event) => handleBuy(bank.id, event)}
-                    >
-                      {loadingBankId === bank.id ? <div className="loader"></div> : 'Buy'}
-                    </button>
-                  </td>
-                </tr>
-              ))
+                        {loadingBankId === bank.id ? <div className="loader"></div> : 'Buy'}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

@@ -10,7 +10,7 @@ const CardList = ({ banks }) => {
   const [loadingBankId, setLoadingBankId] = useState(null);
   const navigate = useNavigate();
   const { updateBalanceAfterTransaction } = useBalanceContext();
-  const [selectedTag, setSelectedTag] = useState('bin');
+  const [selectedTag, setSelectedTag] = useState('type');
   const [searchInput, setSearchInput] = useState('');
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [filteredBanks, setFilteredBanks] = useState(banks);
@@ -143,7 +143,6 @@ const CardList = ({ banks }) => {
 
   // Determine which columns to show based on screen width
   const priorityColumns = [
-    { name: 'Bin', field: 'bin', show: true },
     { name: 'Type', field: 'type', show: true },
     { name: 'Exp', field: 'exp', show: true },
     { name: 'Price', field: 'price', show: true, isCurrency: true },
@@ -182,15 +181,11 @@ const CardList = ({ banks }) => {
               value={selectedTag}
               onChange={handleTagChange}
             >
-              <option value="bin">Bin</option>
-              <option value="type">Type</option>
-              <option value="exp">Exp</option>
-              <option value="price">Price</option>
-              <option value="bank">Bank</option>
-              <option value="country">Country</option>
-              <option value="state">State</option>
-              <option value="zip">Zip</option>
-              <option value="Info">Info</option>
+              {priorityColumns.map(column => (
+                <option key={column.field} value={column.field}>
+                  {column.name}
+                </option>
+              ))}
             </select>
             
             <div className="search-input-wrapper">

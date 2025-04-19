@@ -110,28 +110,30 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
             <FontAwesomeIcon icon={faCashRegister} /> Dumps with Pins
           </li>
           <li className="menu-item" onClick={() => navigate('/cards')}>
-            <FontAwesomeIcon icon={faCreditCard} /> Cards
+            <FontAwesomeIcon icon={faCreditCard} /> Clone Cards
           </li>
           {/* Add Cashout BTC menu item 
           <li className="menu-item" onClick={toggleCashoutModal}>
             <FontAwesomeIcon icon={faBitcoinSign} /> Cashout BTC
           </li>
           */}
-          {/* Render Banks by Location */}
-          {Object.keys(banksByLocation).map(location => (
-            <li
-              key={location}
-              className={`menu-item dropdown ${activeDropdown === location ? 'active' : ''}`}
-              onClick={() => handleDropdownClick(location)}
-            >
-              <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={activeDropdown === location ? faChevronUp : faChevronDown} />
-              <ul className="dropdown-content">
-                {banksByLocation[location].map(bank => (
-                  <li key={bank.id} onClick={() => navigate(`/banks/${bank.slug}`)}>{bank.name}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
+          {/* Render Banks by Location, filtering out 'Other' */}
+          {Object.keys(banksByLocation)
+            .filter(location => location.toLowerCase() !== 'other') // Filter out 'other' case-insensitively
+            .map(location => (
+              <li
+                key={location}
+                className={`menu-item dropdown ${activeDropdown === location ? 'active' : ''}`}
+                onClick={() => handleDropdownClick(location)}
+              >
+                <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={activeDropdown === location ? faChevronUp : faChevronDown} />
+                <ul className="dropdown-content">
+                  {banksByLocation[location].map(bank => (
+                    <li key={bank.id} onClick={() => navigate(`/banks/${bank.slug}`)}>{bank.name}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
         </ul>
 
         <div className='topbar-element'>
