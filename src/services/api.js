@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'https://matrix-backend-henna.vercel.app';
+const BASE_URL = 'https://rex-backend.vercel.app';
 
 // Create an axios instance with default config
 const api = axios.create({
