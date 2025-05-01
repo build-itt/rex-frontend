@@ -18,7 +18,7 @@ const History =() => {
       }
 
       try {
-        const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+        const response = await axios.get('https://rex-backend.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
         const { balance } = response.data;
         localStorage.setItem('balance', balance);
       } catch (error) {

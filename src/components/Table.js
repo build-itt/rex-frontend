@@ -23,7 +23,7 @@ const Table = () => {
       }
 
       try {
-        const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
+        const response = await axios.get('https://rex-backend.vercel.app/pay/balance/', { headers: { Authorization: `Token ${token}` } });
         const { balance } = response.data;
         localStorage.setItem('balance', balance);
       } catch (error) {
@@ -54,7 +54,7 @@ const Table = () => {
   const handleBankData = useCallback(async () => {
     setLoading(true); // Set loading to true before fetching data
     try {
-      const response = await axios.get(`https://matrix-backend-henna.vercel.app/store/category/${slug}/`);
+      const response = await axios.get(`https://rex-backend.vercel.app/store/category/${slug}/`);
       const banks = response.data;
       setBanks(banks);
     } catch (error) {

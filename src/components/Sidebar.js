@@ -20,7 +20,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   useEffect(() => {
     const fetchBanks = async () => {
       try {
-        const response = await axios.get('https://matrix-backend-henna.vercel.app/store/categories/');
+        const response = await axios.get('https://rex-backend.vercel.app/store/categories/');
         const banks = response.data;
 
         // Group banks by location
@@ -60,7 +60,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const handleAddBalance = async () => {
     setIsLoading(true); // Set loading state to true
     try {
-      const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
+      const response = await axios.get('https://rex-backend.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
       const bitcoinAddress = response.data.addr;
       setBitcoinAddress(bitcoinAddress);
     } catch (error) {

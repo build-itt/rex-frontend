@@ -27,7 +27,7 @@ function Topbar() {
   const handleAddBalance = async () => {
     setIsAddressLoading(true);
     try {
-      const response = await axios.get('https://matrix-backend-henna.vercel.app/pay/add/', { 
+      const response = await axios.get('https://rex-backend.vercel.app/pay/add/', { 
         headers: { Authorization: `Token ${token}` } 
       });
       setBitcoinAddress(response.data.addr);
