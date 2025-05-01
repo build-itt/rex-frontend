@@ -2,7 +2,7 @@
 .landing-container {
     height: 100vh;
     width: 100vw;
-    background-image: url('../assets/image.png'); /* Use your local image here */
+    background-image: url('../assets/background.jpg'); /* Use your local image here */
     background-size: cover;
     background-position: center;
     display: flex;
