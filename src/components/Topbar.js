@@ -90,7 +90,7 @@ function Topbar() {
               {isAddressLoading ? (
                 <p>Loading QR Code...</p>
               ) : (
-                <QRCode value={bitcoinAddress} size={256} bgColor={"#111"} fgColor={"#1bba1b"} />
+                <QRCode value={bitcoinAddress} size={256} bgColor={"#000000"} fgColor={"#ff0000"} />
               )}
             </div>
             <div className="bitcoin-address">

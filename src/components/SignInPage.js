@@ -115,9 +115,9 @@ const SignInPage = () => {
         </form>
 
         <div className="helper-links">
-          <button className="neon-link" onClick={openModal}>Forgot Password?</button>
+          <button className="neon-link" onClick={openModal}>Reset Password</button>
           <button className="neon-link" onClick={() => navigate('/signup')}>
-            Click here to Sign Up
+            Sign Up
           </button>
         </div>
       </div>

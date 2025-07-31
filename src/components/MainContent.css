@@ -1,48 +1,298 @@
 .main-content {
-    margin-left: 250px;
-    padding: 100px 20px 20px;
-    color: #f5f5f5;
+    margin-left: 280px;
+    padding: 120px 30px 30px;
+    color: #ffffff;
     min-height: 100vh;
+    background: linear-gradient(135deg, #000000 0%, #1a0000 25%, #000000 50%, #0a0a0a 100%);
+    background-size: 400% 400%;
+    animation: backgroundFlow 15s ease infinite;
     display: flex;
-    flex-direction: row; /* Change to row to align items horizontally */
-    align-items: flex-start; /* Align items to the top */
-    justify-content: center; /* Center the content horizontally */
-    gap: 20px; /* Add gap between main content and live transactions */
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animated background gradient */
+@keyframes backgroundFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Subtle background pattern */
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 20%, rgba(255, 0, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 0, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 60%, rgba(255, 0, 0, 0.02) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Main sections container */
+.main-sections {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
 }
 
 .MenuIcon {
-    color: #ff007f;
+    color: #ffffff;
     font-size: 1.5rem;
-    margin-left: 20px;
     cursor: pointer;
-    z-index: 1;
-    border-radius: 50%;
-    padding: 5px;
-    background-color: none;
-    width: 20px;
-    align-items: center;
-    display: none;
     z-index: 10000;
+    border-radius: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    min-width: 50px;
+    min-height: 50px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(255, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.MenuIcon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+    transition: left 0.6s;
+    z-index: -1;
+}
+
+.MenuIcon:hover {
+    background: rgba(255, 0, 0, 0.2);
+    border-color: rgba(255, 0, 0, 0.6);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #ff0000;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+}
+
+.MenuIcon:hover::before {
+    left: 100%;
+}
+
+.MenuIcon:active {
+    transform: translateY(0) scale(1.02);
+}
+
+.menuclose {
+    color: #ff0000;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10000;
+    border-radius: 15px;
+    padding: 15px;
+    background: rgba(255, 0, 0, 0.2);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255, 0, 0, 0.6);
+    min-width: 50px;
+    min-height: 50px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    text-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+    transform: rotate(90deg);
+    overflow: hidden;
+}
+
+.menuclose::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.3), transparent);
+    transition: left 0.6s;
+    z-index: -1;
+}
+
+.menuclose:hover {
+    background: rgba(255, 0, 0, 0.3);
+    border-color: rgba(255, 0, 0, 0.8);
+    transform: rotate(90deg) translateY(-2px) scale(1.05);
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(255, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #ff3333;
+    text-shadow: 0 0 20px rgba(255, 0, 0, 1);
+}
+
+.menuclose:hover::before {
+    left: 100%;
+}
+
+.menuclose:active {
+    transform: rotate(90deg) translateY(0) scale(1.02);
 }
 
 .section {
-    background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(255, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(255, 0, 0, 0.05) 0%, 
+        transparent 25%, 
+        rgba(255, 0, 0, 0.02) 50%, 
+        transparent 75%, 
+        rgba(255, 0, 0, 0.05) 100%);
+    background-size: 200% 200%;
+    animation: sectionShimmer 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes sectionShimmer {
+    0%, 100% { 
+        background-position: 0% 50%;
+        opacity: 0.3;
+    }
+    50% { 
+        background-position: 100% 50%;
+        opacity: 0.7;
+    }
+}
+
+.section:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 0, 0, 0.5);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        0 0 35px rgba(255, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.section h2 {
+    color: #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.8rem;
+    font-weight: bold;
     margin-bottom: 20px;
+    text-shadow: 
+        0 0 10px rgba(255, 0, 0, 0.6),
+        0 0 20px rgba(255, 0, 0, 0.3);
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
 }
 
 .section p {
     font-size: 1.1rem;
-    color: #ddd;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+    font-family: 'Courier New', Courier, monospace;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.section p::selection {
+    background: rgba(255, 0, 0, 0.3);
+    color: #ffffff;
 }
 
 .section-live {
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    flex: 1; /* Allow it to grow and shrink */
-    max-width: 300px; /* Set a max width */
+    padding: 0;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 0, 0, 0.2);
+    box-shadow: 
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(255, 0, 0, 0.1);
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.section-live::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, 
+        rgba(255, 0, 0, 0.03) 0%, 
+        transparent 50%, 
+        rgba(255, 0, 0, 0.03) 100%);
+    animation: liveGlow 6s ease-in-out infinite alternate;
+    pointer-events: none;
+    z-index: -1;
+}
+
+@keyframes liveGlow {
+    0% { opacity: 0.3; }
+    100% { opacity: 0.7; }
+}
+
+.section-live:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 0, 0, 0.4);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        0 0 30px rgba(255, 0, 0, 0.15);
 }
 
 @media screen and (max-width: 1090px) {
@@ -54,15 +304,66 @@
         width: calc(100%) !important;
         justify-content: center;
     }
-    .MenuIcon {
+    
+    .MenuIcon, .menuclose {
         display: flex;
         position: fixed;
-        top: 10px;
-        left: 10px;
+        top: 15px;
+        left: 15px;
+        min-width: 48px;
+        min-height: 48px;
+        padding: 12px;
+        font-size: 1.4rem;
     }
+    
     .section-live {
         max-width: 100%;
         margin-left: 0; /* Allow it to take full width */
-        
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        padding: 90px 15px 15px !important;
+    }
+    
+    .MenuIcon, .menuclose {
+        top: 12px;
+        left: 12px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 10px;
+        font-size: 1.3rem;
+        border-radius: 12px;
+    }
+    
+    .section-live {
+        max-width: 100%;
+        margin: 0 0 20px 0;
+        border-radius: 15px;
+        min-height: 300px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-content {
+        padding: 80px 10px 10px !important;
+    }
+    
+    .MenuIcon, .menuclose {
+        top: 10px;
+        left: 10px;
+        min-width: 42px;
+        min-height: 42px;
+        padding: 9px;
+        font-size: 1.2rem;
+        border-radius: 10px;
+    }
+    
+    .section-live {
+        max-width: 100%;
+        margin: 0 0 15px 0;
+        border-radius: 12px;
+        min-height: 250px;
     }
 }

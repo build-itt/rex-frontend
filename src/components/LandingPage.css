@@ -1,8 +1,8 @@
-/* Full page background */
+/* Full page background with original image */
 .landing-container {
     height: 100vh;
     width: 100vw;
-    background-image: url('../assets/background.jpg'); /* Use your local image here */
+    background-image: url('../assets/background.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -15,7 +15,7 @@
     z-index: 1;
   }
   
-  /* Overlay effect to darken the image */
+  /* Dark overlay for better contrast */
   .landing-container::before {
     content: "";
     position: absolute;
@@ -23,103 +23,177 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
-    z-index: -1; /* Behind content */
-  }
-  
-  /* Centered text */
-  .text-container {
-    margin-bottom: 40px;
-  }
-  
-  /* Animated text */
-  .animated-text {
-    font-size: 4rem;
-    font-family: 'Courier New', Courier, monospace;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide the text overflow */
-    border-right: 2px solid white; /* Cursor effect */
-    animation: blinkCursor 0.75s step-end infinite;
-  }
-  
-  /* Blinking cursor animation */
-  @keyframes blinkCursor {
-    from {
-      border-right-color: white;
-    }
-    to {
-      border-right-color: transparent;
-    }
-  }
-  
-/* Button container remains the same */
-.button-container {
-    display: flex;
-    gap: 20px;
-  }
-  
-  /* Dark web style buttons */
-  .btn {
-    background-color: #1b1b1b; /* Deep dark background */
-    color: #f0f0f0; /* Light text for contrast */
-    border: 2px solid #ff007f; /* Neon pinkish border */
-    padding: 12px 30px;
-    font-size: 1.5rem;
-    font-family: 'Courier New', Courier, monospace;
-    cursor: pointer;
-    border-radius: 50px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8), 0 0 20px rgba(255, 0, 127, 0.5); /* Neon glow */
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-  }
-  
-  /* Button hover effects - more glow */
-  .btn:hover {
-    transform: scale(1.1);
-    background-color: #2e2e2e; /* Slightly lighter on hover */
-    box-shadow: 0 0 15px rgba(255, 0, 127, 1), 0 0 30px rgba(255, 0, 127, 0.8); /* Stronger neon glow */
-  }
-  
-  /* Button specific styles - Sign In */
-  .btn-signup {
-    border-color: #00ff9f; /* Neon greenish border */
-    box-shadow: 0 0 10px rgba(0, 255, 159, 0.8), 0 0 20px rgba(0, 255, 159, 0.5); /* Neon green glow */
-  }
-  
-  .btn-signup:hover {
-    background-color: #2e2e2e;
-    box-shadow: 0 0 15px rgba(0, 255, 159, 1), 0 0 30px rgba(0, 255, 159, 0.8); /* Stronger green neon */
-  }
-  
-  /* Button specific styles - Sign Up */
-  .btn-signin {
-    border-color: #ff007f; /* Neon pink border */
-    box-shadow: 0 0 10px rgba(255, 0, 127, 0.8), 0 0 20px rgba(255, 0, 127, 0.5); /* Neon pink glow */
-  }
-  
-  .btn-signin:hover {
-    background-color: #2e2e2e;
-    box-shadow: 0 0 15px rgba(255, 0, 127, 1), 0 0 30px rgba(255, 0, 127, 0.8); /* Stronger pink neon */
-  }
-  
-/* Optional glitch effect for extra flair */
-.btn::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: -5px;
-    right: -5px;
-    bottom: -5px;
-    background: linear-gradient(45deg, transparent, rgba(255, 0, 127, 0.5), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0.6);
     z-index: -1;
   }
   
-  .btn:hover::before {
+  /* Simplified text container */
+  .text-container {
+    margin-bottom: 60px;
+    padding: 40px 60px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ff0000;
+    border-radius: 15px;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.5),
+      0 0 20px rgba(255, 0, 0, 0.3);
+    position: relative;
+  }
+  
+  /* Red and white animated text */
+  .animated-text {
+    font-size: 4.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid transparent;
+    color: #ffffff;
+    animation: blinkCursor 1s step-end infinite;
+    text-shadow: 
+      0 0 10px rgba(255, 0, 0, 0.8),
+      0 0 20px rgba(255, 0, 0, 0.4);
+  }
+  
+  /* Red blinking cursor */
+  @keyframes blinkCursor {
+    0%, 50% { border-right-color: #ff0000; }
+    51%, 100% { border-right-color: transparent; }
+  }
+  
+  /* Subtitle styling */
+  .subtitle {
+    margin-top: 20px;
+    opacity: 0.9;
+  }
+  
+  .subtitle-text {
+    font-size: 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ff0000;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: fadeInUp 2s ease-out 0.5s both;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 0.9;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Loading animation for container */
+  .landing-container {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 1s ease-out;
+  }
+  
+  .landing-container.loaded {
     opacity: 1;
-    filter: blur(5px);
-    transform: skew(20deg);
+    transform: scale(1);
+  }
+  
+/* Modern button container */
+.button-container {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+  }
+  
+  /* Red and black buttons */
+  .btn {
+    background: linear-gradient(145deg, #1a0000, #000000);
+    color: #ffffff;
+    border: 2px solid #ff0000;
+    padding: 16px 40px;
+    font-size: 1.3rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 1;
+    box-shadow: 
+      0 8px 25px rgba(0, 0, 0, 0.5),
+      0 0 15px rgba(255, 0, 0, 0.3);
+  }
+  
+  /* Red glow effect on hover */
+  .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+    transition: left 0.6s;
+    z-index: -1;
+  }
+  
+  /* Button hover effects */
+  .btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(145deg, #330000, #1a0000);
+    box-shadow: 
+      0 12px 30px rgba(0, 0, 0, 0.6),
+      0 0 25px rgba(255, 0, 0, 0.5);
+    border-color: #ff3333;
+  }
+  
+  .btn:hover::before {
+    left: 100%;
+  }
+  
+  .btn:active {
+    transform: translateY(0px);
+  }
+  
+  /* Both buttons use the same red/black theme */
+  .btn-signup, .btn-signin {
+    /* Inherit base button styles */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .text-container {
+      padding: 30px 40px;
+      margin-bottom: 40px;
+    }
+    
+    .animated-text {
+      font-size: 3rem;
+    }
+    
+    .button-container {
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .btn {
+      width: 200px;
+      font-size: 1.1rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .animated-text {
+      font-size: 2.5rem;
+    }
+    
+    .text-container {
+      padding: 20px 30px;
+    }
   }

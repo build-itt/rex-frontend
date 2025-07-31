@@ -1,10 +1,32 @@
-/* General styles for the Sign-In Page */
+/* Modern Sign-In Page with red/black theme */
 .signin-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #111;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0000 50%, #000000 100%);
+    background-size: 400% 400%;
+    animation: backgroundPulse 8s ease infinite;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  @keyframes backgroundPulse {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* Subtle background pattern */
+  .signin-container::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 25% 25%, rgba(255, 0, 0, 0.1) 0%, transparent 50%);
+    opacity: 0.3;
+    z-index: 0;
   }
   .button-container-login {
     display: flex;
@@ -14,37 +36,59 @@
   }
   
   .form-container {
-    background-color: rgba(0, 0, 0, 0.8);
-    padding: 30px 40px !important;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(255, 0, 127, 0.7) !important;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(15px);
+    padding: 40px 45px;
+    border-radius: 20px;
+    border: 2px solid #ff0000;
+    box-shadow: 
+      0 20px 40px rgba(0, 0, 0, 0.6),
+      0 0 30px rgba(255, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
     text-align: center;
-    width: 90% !important; /* Make the form container flexible */
-    max-width: 400px !important; /* Limit the maximum width for larger screens */
+    width: 90%;
+    max-width: 450px;
+    position: relative;
+    z-index: 1;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+  }
+  
+  .form-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+      0 25px 50px rgba(0, 0, 0, 0.7),
+      0 0 40px rgba(255, 0, 0, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
   
   .signin-title {
-    font-size: 2rem;
-    color: #ff007f;
-    margin-bottom: 20px;
-    text-shadow: 0 0 10px rgba(255, 0, 127, 0.8);
-    display: inline-block; /* Allows the cursor to appear directly after the text */
+    font-size: 2.5rem;
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    text-shadow: 
+      0 0 10px rgba(255, 0, 0, 0.8),
+      0 0 20px rgba(255, 0, 0, 0.4);
+    display: inline-block;
     position: relative;
+    letter-spacing: 2px;
   }
   
-  /* Adding the blinking cursor */
+  /* Red blinking cursor */
   .signin-title::after {
-    content: "."; /* This simulates the blinking cursor */
+    content: "_";
     position: absolute;
-    right: -10px; /* Adjust the position as needed */
-    animation: blinkCursorsignin 0.75s step-end infinite;
-    color: white; /* Cursor color */
+    right: -15px;
+    animation: blinkCursorsignin 1s step-end infinite;
+    color: #ff0000;
+    font-weight: normal;
   }
   
   @keyframes blinkCursorsignin {
-    50% {
-      opacity: 0; /* Make it disappear in the middle of the cycle */
-    }
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
   }
   
   .input-group {
@@ -52,53 +96,113 @@
   }
   
   .neon-input {
-    width: 100% !important;
-    padding: 10px !important;
-    background-color: transparent !important;
-    border: 2px solid #ff007f !important;
-    color: white !important;
-    font-size: 1rem !important;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8) !important;
-    border-radius: 5px !important;
-    outline: none !important;
-    font-size: 16px;
+    width: 100%;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid #ff0000;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
   }
+  
   .neon-input:focus {
-    border-color: #00ff9f;
-    box-shadow: 0 0 15px rgba(0, 255, 159, 1), 0 0 30px rgba(0, 255, 159, 0.8);
+    border-color: #ff3333;
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 
+      inset 0 2px 5px rgba(0, 0, 0, 0.3),
+      0 0 20px rgba(255, 0, 0, 0.4);
+    transform: scale(1.02);
   }
+  
   .neon-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
   }
   
   .btn-submit {
-    background-color: transparent;
-    border: 2px solid #ff007f;
-    padding: 10px 20px;
-    color: white;
+    background: linear-gradient(145deg, #1a0000, #000000);
+    border: 2px solid #ff0000;
+    padding: 15px 30px;
+    color: #ffffff;
     text-transform: uppercase;
     cursor: pointer;
-    font-size: 1.1rem;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+      0 8px 20px rgba(0, 0, 0, 0.4),
+      0 0 15px rgba(255, 0, 0, 0.3);
+  }
+  
+  .btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
+    transition: left 0.6s;
+    z-index: -1;
   }
   
   .btn-submit:hover {
-    background-color: none;
-    box-shadow: 0 0 10px rgba(255, 0, 127, 1);
+    background: linear-gradient(145deg, #330000, #1a0000);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 12px 25px rgba(0, 0, 0, 0.5),
+      0 0 25px rgba(255, 0, 0, 0.4);
+    border-color: #ff3333;
+  }
+  
+  .btn-submit:hover::before {
+    left: 100%;
+  }
+  
+  .btn-submit:active {
+    transform: translateY(0);
+  }
+  
+  .btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
   }
   .error-message {
-    background-color: #ff4d4d;
+    background: linear-gradient(145deg, #330000, #ff0000);
     color: white;
-    padding: 10px;
-    margin-bottom: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
     width: 100%;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    border: 1px solid #ff3333;
+    border-radius: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 
+      0 5px 15px rgba(255, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
     text-align: center;
-    animation: fadeOut 5s ease-in-out forwards;
+    animation: errorFadeIn 0.3s ease-out, fadeOut 5s ease-in-out 4.7s forwards;
+  }
+  
+  @keyframes errorFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   
   @keyframes fadeOut {
@@ -113,13 +217,13 @@
     }
   }
   .loader {
-    border: 4px solid rgba(255, 0, 127, 0.2); /* Light pink border */
-    border-top: 4px solid #ff007f; /* Neon pink */
+    border: 3px solid rgba(255, 0, 0, 0.2);
+    border-top: 3px solid #ff0000;
     border-radius: 50%;
     width: 20px;
     height: 20px;
     animation: spin 1s linear infinite;
-    box-shadow: 0 0 15px #ff007f, 0 0 30px rgba(255, 0, 127, 0.5);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
   }
   
   @keyframes spin {
@@ -141,17 +245,25 @@
   .neon-link {
     background: none;
     border: none;
-    color: #ff007f;
+    color: #ff0000;
     font-size: 1rem;
+    font-family: 'Courier New', Courier, monospace;
     cursor: pointer;
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-    text-shadow: 0 0 5px rgba(255, 0, 127, 0.8);
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
     margin-bottom: 10px;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    padding: 5px 10px;
+    border-radius: 5px;
   }
   
   .neon-link:hover {
-    color: #00ff9f;
-    text-shadow: 0 0 10px rgba(0, 255, 159, 1);
+    color: #ff3333;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+    text-decoration-color: #ff0000;
+    background: rgba(255, 0, 0, 0.1);
+    transform: scale(1.05);
   }
   
   /* Mobile Responsiveness */

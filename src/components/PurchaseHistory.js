@@ -68,11 +68,25 @@ const PurchaseHistory = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="history-container">
+        <div className="loading-state">
+          <div>🔍 Loading Purchase History...</div>
+          <div className="loading-spinner"></div>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <p>Error: {error}</p>;
+    return (
+      <div className="history-container">
+        <div className="error-state">
+          <div>❌ Error Loading History</div>
+          <div style={{marginTop: '10px', fontSize: '1rem', opacity: 0.8}}>{error}</div>
+        </div>
+      </div>
+    );
   }
 
   const user = JSON.parse(localStorage.getItem('user'));
@@ -121,9 +135,15 @@ const PurchaseHistory = () => {
         <p><strong>Email:</strong> {user.email}</p>
         <p><strong>Total Purchases:</strong> {purchases.length}</p>
       </div>
-      {successMessage && <div className="success-message">{successMessage}</div>}
-      {errorMessage && <div className="error-message">{errorMessage}</div>}
-      {purchases.map((purchase, index) => (
+      {successMessage && <div className="success-message">✅ {successMessage}</div>}
+      {errorMessage && <div className="error-message">⚠️ {errorMessage}</div>}
+      {purchases.length === 0 ? (
+        <div className="loading-state">
+          <div>📋 No Purchase History Found</div>
+          <div style={{marginTop: '10px', fontSize: '1rem', opacity: 0.8}}>You haven't made any purchases yet.</div>
+        </div>
+      ) : (
+        purchases.map((purchase, index) => (
         <div key={index} className="purchase-card">
           <div className="price">
             <span className="amount">${purchase.amount}</span>
@@ -132,17 +152,18 @@ const PurchaseHistory = () => {
             <p>{purchase.details}</p>
           </div>
           <div className="actions">
-            <button className="btn-paid">Paid</button>
+            <button className="btn-paid">💳 Paid</button>
             <button
               className="btn-decrypt"
               onClick={() => handleDecrypt(purchase.id)}
               disabled={decryptedPurchases[purchase.id]}
             >
-              {decryptedPurchases[purchase.id] ? 'Decrypted' : 'Decrypt'}
+              {decryptedPurchases[purchase.id] ? '🔓 Decrypted' : '🔒 Decrypt'}
             </button>
           </div>
         </div>
-      ))}
+      ))
+      )}
     </div>
   );
 };

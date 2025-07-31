@@ -123,7 +123,7 @@ const isRecentPurchase = (timestamp) => {
 const LiveTransactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [isMobile, setIsMobile] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true); // Always expanded in main content
   const [newTransactionId, setNewTransactionId] = useState(null);
   const [recentPurchases, setRecentPurchases] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
@@ -286,43 +286,24 @@ const LiveTransactions = () => {
     }
   }, [newTransactionId]);
 
-  // Toggle expansion
-  const toggleExpansion = () => {
-    setIsExpanded(prev => !prev);
-    // Clear notification count when expanded
-    if (!isExpanded) {
-      setNotificationCount(0);
-    }
-  };
+
 
   return (
-    <>
-      {/* Trigger button */}
-      <button className="live-transactions-trigger" onClick={toggleExpansion}>
-        <i>💸</i>
-        <span className="live-pulse"></span>
-        {notificationCount > 0 && (
-          <span className="notification-badge">{notificationCount}</span>
-        )}
-      </button>
-      
-      {/* Main container */}
       <div 
-        className={`live-transactions-container ${isExpanded ? 'expanded' : ''}`}
+        className="live-transactions-container"
         ref={containerRef}
       >
-        <div className="live-transactions-header" onClick={isMobile ? toggleExpansion : undefined}>
+        <div className="live-transactions-header">
           <h3 className="live-transactions-title">
             <span className="live-pulse"></span>
-            Live Transactions
+            💸 Live Transactions
           </h3>
-          <button className="minimize-button" onClick={toggleExpansion}>
-            {isExpanded ? '−' : '+'}
-          </button>
+          {notificationCount > 0 && (
+            <span className="notification-badge">{notificationCount}</span>
+          )}
         </div>
 
-        {isExpanded && (
-          <ul className="live-transactions-body">
+        <ul className="live-transactions-body">
             {transactions.map(transaction => (
               <li 
                 key={transaction.id} 
@@ -349,10 +330,8 @@ const LiveTransactions = () => {
                 <span className="transaction-amount">${transaction.amount.toFixed(2)}</span>
               </li>
             ))}
-          </ul>
-        )}
+        </ul>
       </div>
-    </>
   );
 };
 

@@ -4,7 +4,7 @@ import './Sidebar.css';
 import CashoutModal from './CashoutModal';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faChevronUp, faCreditCard, faTerminal, faCopy, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faMoneyBillWave, faBank, faCashRegister, faHistory, faHeadset, faSignOutAlt, faChevronDown, faCreditCard, faTerminal, faCopy, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import QRCode from 'qrcode.react';
 
 const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
@@ -26,12 +26,19 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
         // Group banks by location
         const groupedBanks = banks.reduce((acc, bank) => {
           const { location } = bank;
-          if (!acc[location]) {
-            acc[location] = [];
+          console.log('Processing bank:', bank.name, 'with location:', location); // Debug log
+          
+          // Handle empty, null, or undefined locations
+          const normalizedLocation = location && location.trim() ? location.trim() : 'Other';
+          
+          if (!acc[normalizedLocation]) {
+            acc[normalizedLocation] = [];
           }
-          acc[location].push(bank);
+          acc[normalizedLocation].push(bank);
           return acc;
         }, {});
+        
+        console.log('Final grouped banks:', groupedBanks); // Debug log
 
         setBanksByLocation(groupedBanks);
       } catch (error) {
@@ -78,10 +85,23 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   // Define the lazy-loaded button component inline
   const LazyBalanceButton = lazy(() => import('./SidebarBalance'));
 
-  const [activeDropdown, setActiveDropdown] = useState(null);
+
+  const [liquidGlassOpen, setLiquidGlassOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   const handleDropdownClick = (location) => {
-    setActiveDropdown(activeDropdown === location ? null : location);
+    setSelectedLocation(location);
+    setLiquidGlassOpen(true);
+  };
+
+  const closeLiquidGlass = () => {
+    setLiquidGlassOpen(false);
+    setTimeout(() => setSelectedLocation(null), 400); // Delay to allow animation
+  };
+
+  const handleBankSelect = (bankSlug) => {
+    closeLiquidGlass();
+    navigate(`/banks/${bankSlug}`);
   };
 
   const copyToClipboard = () => {
@@ -119,21 +139,23 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           */}
           {/* Render Banks by Location, filtering out 'Other' */}
           {Object.keys(banksByLocation)
-            .filter(location => location.toLowerCase() !== 'other') // Filter out 'other' case-insensitively
-            .map(location => (
+            .filter(location => {
+              console.log('Checking location for filtering:', location, 'lowercase:', location.toLowerCase()); // Debug log
+              const lowercaseLocation = location.toLowerCase().trim();
+              return lowercaseLocation !== 'other' && lowercaseLocation !== '';
+            }) // Filter out 'other' and empty locations case-insensitively
+            .map(location => {
+              console.log('Rendering location:', location); // Debug log
+              return (
               <li
                 key={location}
-                className={`menu-item dropdown ${activeDropdown === location ? 'active' : ''}`}
+                className="menu-item dropdown"
                 onClick={() => handleDropdownClick(location)}
               >
-                <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={activeDropdown === location ? faChevronUp : faChevronDown} />
-                <ul className="dropdown-content">
-                  {banksByLocation[location].map(bank => (
-                    <li key={bank.id} onClick={() => navigate(`/banks/${bank.slug}`)}>{bank.name}</li>
-                  ))}
-                </ul>
+                <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={faChevronDown} />
               </li>
-            ))}
+            );
+          })}
         </ul>
 
         <div className='topbar-element'>
@@ -160,6 +182,42 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
         </div>
       </div>
       <CashoutModal isOpen={isCashoutModalOpen} onClose={toggleCashoutModal} />
+      
+      {/* Liquid Glass Popup for Bank Selection */}
+      {liquidGlassOpen && selectedLocation && (
+        <div className={`liquid-glass-overlay ${liquidGlassOpen ? 'active' : ''}`} onClick={closeLiquidGlass}>
+          <div className="liquid-glass-popup" onClick={e => e.stopPropagation()}>
+            <button className="liquid-glass-close" onClick={closeLiquidGlass}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+            
+            <div className="liquid-glass-header">
+              <h3 className="liquid-glass-title">{selectedLocation} Banks</h3>
+              <p className="liquid-glass-subtitle">Select a Bank to Access</p>
+            </div>
+            
+            <div className="liquid-glass-content">
+              {console.log('Modal rendering for location:', selectedLocation, 'banks:', banksByLocation[selectedLocation])} {/* Debug log */}
+              {banksByLocation[selectedLocation] && banksByLocation[selectedLocation].length > 0 ? (
+                banksByLocation[selectedLocation].map(bank => (
+                <div
+                  key={bank.id}
+                  className="liquid-glass-item"
+                  onClick={() => handleBankSelect(bank.slug)}
+                >
+                  {bank.name}
+                </div>
+              ))
+              ) : (
+                <div className="liquid-glass-item">
+                  No banks available for {selectedLocation}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {isModalOpen && (
         <div className="modal-overlay" onClick={toggleModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>

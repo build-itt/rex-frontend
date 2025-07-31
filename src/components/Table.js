@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useParams } from "react-router-dom"; // Import useParams
+import { useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import BankList from "./BankList";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import "./MainContent.css";
 
 const Table = () => {
   const { slug } = useParams(); // Get the slug from the URL
@@ -79,11 +80,16 @@ const Table = () => {
       </div>
       <Topbar />
       <div className="main-content">
-        {loading ? (
-          <div className="table-typing">Loading...</div> // Display loading indicator
-        ) : (
-          <BankList banks={banks} />    
-        )}
+        <div className="table-content-wrapper">
+          {loading ? (
+            <div className="loading-container">
+              <div className="table-typing">🔍 Loading Banks...</div>
+              <div className="loading-spinner"></div>
+            </div>
+          ) : (
+            <BankList banks={banks} />    
+          )}
+        </div>
       </div>
     </div>
   );

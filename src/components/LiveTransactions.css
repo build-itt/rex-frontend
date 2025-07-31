@@ -1,119 +1,158 @@
 .live-transactions-container {
-  position: fixed;
-  right: 0;
-  top: 60px;
-  height: calc(100vh - 60px);
-  width: 320px;
-  background-color: #1e1e2d;
-  border-left: 1px solid #32323e;
-  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.2);
-  color: #fff;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 0, 0, 0.3);
+  border-radius: 20px;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    0 0 25px rgba(255, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: #ffffff;
   display: flex;
   flex-direction: column;
-  z-index: 990;
-  transition: transform 0.3s ease-in-out;
-  transform: translateX(100%);
   overflow: hidden;
+  transition: all 0.4s ease;
+  min-height: 500px;
 }
 
-.live-transactions-container.expanded {
-  transform: translateX(0);
+.live-transactions-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 0, 0, 0.05) 0%, 
+    transparent 25%, 
+    rgba(255, 0, 0, 0.02) 50%, 
+    transparent 75%, 
+    rgba(255, 0, 0, 0.05) 100%);
+  background-size: 200% 200%;
+  animation: liveShimmer 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes liveShimmer {
+  0%, 100% { 
+    background-position: 0% 50%;
+    opacity: 0.3;
+  }
+  50% { 
+    background-position: 100% 50%;
+    opacity: 0.7;
+  }
+}
+
+.live-transactions-container:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 0, 0, 0.5);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 35px rgba(255, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .live-transactions-trigger {
-  position: fixed;
-  right: 15px;
-  top: 75px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: #1e1e2d;
-  border: 1px solid #32323e;
-  color: #fff;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 991;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s ease-in-out;
+  display: none; /* Hidden since we're showing in main content */
 }
 
-.live-transactions-trigger:hover {
-  background-color: #2b2b3c;
-  transform: scale(1.05);
-}
-
-.live-transactions-trigger:active {
-  transform: scale(0.95);
-}
+/* Trigger button styles removed since it's not used */
 
 .notification-badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  background-color: #fc544b;
+  top: 10px;
+  right: 15px;
+  background: linear-gradient(145deg, #ff0000, #cc0000);
   color: white;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 12px;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
-  animation: pulse 1s infinite;
+  box-shadow: 
+    0 5px 15px rgba(255, 0, 0, 0.3),
+    0 0 10px rgba(255, 0, 0, 0.5);
+  animation: pulseRed 2s infinite;
+  z-index: 2;
+}
+
+@keyframes pulseRed {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 
+      0 5px 15px rgba(255, 0, 0, 0.3),
+      0 0 10px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow: 
+      0 8px 20px rgba(255, 0, 0, 0.4),
+      0 0 15px rgba(255, 0, 0, 0.7);
+  }
 }
 
 .live-transactions-header {
-  padding: 15px;
-  border-bottom: 1px solid #32323e;
+  padding: 20px 25px;
+  border-bottom: 2px solid rgba(255, 0, 0, 0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #1e1e2d;
-  height: 60px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
 }
 
 .live-transactions-title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  color: #ffffff;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  text-shadow: 
+    0 0 10px rgba(255, 0, 0, 0.6),
+    0 0 20px rgba(255, 0, 0, 0.3);
+  letter-spacing: 1px;
 }
 
 .live-pulse {
   display: inline-block;
-  width: 10px;
-  height: 10px;
-  background-color: #0ACF97;
+  width: 12px;
+  height: 12px;
+  background-color: #ff0000;
   border-radius: 50%;
   position: relative;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
 }
 
 .live-pulse::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #0ACF97;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background-color: #ff0000;
   border-radius: 50%;
-  animation: pulse 1.5s infinite ease-in-out;
-  opacity: 0.7;
+  animation: redPulse 2s infinite ease-in-out;
+  opacity: 0.6;
 }
 
-@keyframes pulse {
+@keyframes redPulse {
   0% {
     transform: scale(1);
-    opacity: 0.7;
+    opacity: 0.6;
   }
   50% {
-    transform: scale(1.6);
+    transform: scale(1.8);
     opacity: 0;
   }
   100% {
@@ -122,40 +161,77 @@
   }
 }
 
+/* Removed old pulse animation - using redPulse instead */
+
 .live-transactions-body {
   flex-grow: 1;
   overflow-y: auto;
   padding: 0;
   margin: 0;
   list-style: none;
+  position: relative;
+  z-index: 1;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 0, 0, 0.6) rgba(0, 0, 0, 0.2);
 }
 
 .transaction-item {
-  padding: 15px;
-  border-bottom: 1px solid #32323e;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(255, 0, 0, 0.1);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.2s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  backdrop-filter: blur(5px);
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .transaction-item:hover {
-  background-color: #2b2b3c;
+  background: rgba(255, 0, 0, 0.1);
+  transform: translateX(5px);
+  border-left: 3px solid #ff0000;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .transaction-item.new {
-  background-color: rgba(10, 207, 151, 0.1);
-  animation: fadeInOut 2s ease-in-out;
+  background: rgba(255, 0, 0, 0.2);
+  border-left: 3px solid #ff0000;
+  animation: newTransactionGlow 3s ease-in-out;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
 }
 
 .transaction-item.your-product {
-  background-color: rgba(50, 131, 255, 0.1);
-  border-left: 3px solid #3283ff;
+  background: rgba(255, 0, 0, 0.15);
+  border-left: 4px solid #ff0000;
+  position: relative;
 }
 
-@keyframes fadeInOut {
-  0% { background-color: rgba(10, 207, 151, 0.3); }
-  100% { background-color: rgba(10, 207, 151, 0); }
+.transaction-item.your-product::before {
+  content: "YOUR PURCHASE";
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 0.7rem;
+  color: #ff0000;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+@keyframes newTransactionGlow {
+  0% { 
+    background: rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+  }
+  50% {
+    background: rgba(255, 0, 0, 0.2);
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+  }
+  100% { 
+    background: rgba(255, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+  }
 }
 
 .transaction-user {
@@ -165,20 +241,44 @@
 }
 
 .user-avatar {
-  width: 42px;
-  height: 42px;
-  background-color: #3283ff;
-  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(145deg, #1a0000, #000000);
+  border: 2px solid #ff0000;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 14px;
-  color: white;
+  font-size: 0.9rem;
+  font-family: 'Courier New', Courier, monospace;
+  color: #ffffff;
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s ease;
 }
 
 .transaction-item.your-product .user-avatar {
-  background-color: #fc544b;
+  background: linear-gradient(145deg, #330000, #ff0000);
+  border-color: #ff3333;
+  box-shadow: 
+    0 5px 15px rgba(0, 0, 0, 0.4),
+    0 0 15px rgba(255, 0, 0, 0.5);
+  animation: yourPurchaseGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes yourPurchaseGlow {
+  0% {
+    box-shadow: 
+      0 5px 15px rgba(0, 0, 0, 0.4),
+      0 0 15px rgba(255, 0, 0, 0.5);
+  }
+  100% {
+    box-shadow: 
+      0 8px 20px rgba(0, 0, 0, 0.5),
+      0 0 25px rgba(255, 0, 0, 0.8);
+  }
 }
 
 .user-info {
@@ -187,82 +287,182 @@
 }
 
 .user-name {
-  font-weight: 600;
-  color: #fff;
-  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 0.5px;
 }
 
 .transaction-time {
-  color: #6c7293;
-  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .product-info {
-  color: #8cccff;
-  font-size: 13px;
-  margin-top: 2px;
+  color: #ff0000;
+  font-size: 0.85rem;
+  font-family: 'Courier New', Courier, monospace;
+  margin-top: 3px;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 0, 0, 0.3);
 }
 
 .transaction-amount {
-  color: #0ACF97;
-  font-weight: 600;
-  font-size: 16px;
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 1.1rem;
+  font-family: 'Courier New', Courier, monospace;
+  text-shadow: 0 0 10px rgba(255, 0, 0, 0.4);
+  letter-spacing: 1px;
 }
 
 .minimize-button {
-  background: none;
-  border: none;
-  color: #6c7293;
-  font-size: 22px;
+  background: linear-gradient(145deg, #1a0000, #000000);
+  border: 2px solid #ff0000;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   padding: 0;
-  transition: color 0.2s ease;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
 }
 
 .minimize-button:hover {
-  color: #fff;
+  background: linear-gradient(145deg, #330000, #1a0000);
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
 }
 
 .live-transactions-body::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .live-transactions-body::-webkit-scrollbar-track {
-  background: #1e1e2d;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 
 .live-transactions-body::-webkit-scrollbar-thumb {
-  background-color: #32323e;
-  border-radius: 20px;
+  background: linear-gradient(180deg, #ff0000, #cc0000);
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
 
 .live-transactions-body::-webkit-scrollbar-thumb:hover {
-  background-color: #3d3d52;
+  background: linear-gradient(180deg, #ff3333, #ff0000);
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
 }
 
 @media screen and (max-width: 768px) {
   .live-transactions-container {
+    position: relative;
     width: 100%;
     height: auto;
-    max-height: 300px;
-    top: auto;
-    bottom: 0;
-    transform: translateY(100%);
-  }
-
-  .live-transactions-container.expanded {
-    transform: translateY(0);
+    min-height: 300px;
+    max-height: 400px;
+    transform: none;
+    margin-bottom: 20px;
+    border-radius: 15px;
   }
   
-  .live-transactions-trigger {
-    bottom: 15px;
-    top: auto;
-    right: 15px;
+  .live-transactions-header {
+    padding: 15px 20px;
+  }
+  
+  .live-transactions-title {
+    font-size: 1.2rem;
+  }
+  
+  .live-transactions-body {
+    max-height: 250px;
+    padding: 0 15px 15px 15px;
+  }
+  
+  .transaction-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+  }
+  
+  .user-avatar {
+    width: 35px;
+    height: 35px;
+    font-size: 0.7rem;
+  }
+  
+  .user-name {
+    font-size: 0.9rem;
+  }
+  
+  .transaction-time {
+    font-size: 0.75rem;
+  }
+  
+  .transaction-amount {
+    font-size: 1rem;
+  }
+  
+  .product-info {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .live-transactions-container {
+    min-height: 250px;
+    max-height: 300px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+  }
+  
+  .live-transactions-header {
+    padding: 12px 15px;
+  }
+  
+  .live-transactions-title {
+    font-size: 1.1rem;
+  }
+  
+  .live-transactions-body {
+    max-height: 200px;
+    padding: 0 12px 12px 12px;
+  }
+  
+  .transaction-item {
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+  }
+  
+  .user-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 0.65rem;
+  }
+  
+  .user-name {
+    font-size: 0.85rem;
+  }
+  
+  .transaction-time {
+    font-size: 0.7rem;
+  }
+  
+  .transaction-amount {
+    font-size: 0.95rem;
+  }
+  
+  .product-info {
+    font-size: 0.75rem;
   }
 }
   

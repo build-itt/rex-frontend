@@ -6,21 +6,33 @@ const LandingPage = () => {
   const [languageIndex, setLanguageIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [letterIndex, setLetterIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
   
   // Use refs to hold interval IDs to prevent memory leaks
   const languageIntervalRef = useRef(null);
   const typeIntervalRef = useRef(null);
   
-  // Use useMemo to memoize the languages array
+  // Use useMemo to memoize the languages array with more diverse greetings
   const languages = useMemo(
-    () => ["Welcome", "Bienvenido", "Bienvenue", "Willkommen", "欢迎", "أهلاً وسهلاً"],
+    () => [
+      "Welcome", 
+      "Bienvenido", 
+      "Bienvenue", 
+      "Willkommen", 
+      "欢迎", 
+      "أهلاً بك في",
+      "Добро пожаловать",
+      "स्वागत है"
+    ],
     []
   );
 
-  // Clear any existing intervals when component unmounts
+  // Component mount animation
   useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => {
+      clearTimeout(timer);
       if (languageIntervalRef.current) clearInterval(languageIntervalRef.current);
       if (typeIntervalRef.current) clearInterval(typeIntervalRef.current);
     };
@@ -67,13 +79,28 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="landing-container">
+    <div className={`landing-container ${isLoaded ? 'loaded' : ''}`}>
       <div className="text-container">
         <h1 className="animated-text">{displayedText}</h1>
+        <div className="subtitle">
+          <span className="subtitle-text">Enter the Digital Underground</span>
+        </div>
       </div>
       <div className="button-container">
-        <button className="btn btn-signin" onClick={() => handleNavigation('/signin')}>Sign In</button>
-        <button className="btn btn-signup" onClick={() => handleNavigation('/signup')}>Sign Up</button>
+        <button 
+          className="btn btn-signin" 
+          onClick={() => handleNavigation('/signin')}
+          aria-label="Sign in to your account"
+        >
+          <span>Sign In</span>
+        </button>
+        <button 
+          className="btn btn-signup" 
+          onClick={() => handleNavigation('/signup')}
+          aria-label="Create a new account"
+        >
+          <span>Sign Up</span>
+        </button>
       </div>
     </div>
   );

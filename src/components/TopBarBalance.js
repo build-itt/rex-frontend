@@ -15,9 +15,11 @@ const BalanceButton = ({ toggleModal }) => {
       });
 
   return (
-    <span className="nav-link glassy-m" onClick={toggleModal}>
-      <FontAwesomeIcon icon={faDollarSign} />
-      {isLoading ? 'Loading...' : formattedBalance}
+    <span className="nav-link glassy-m balance-display" onClick={toggleModal}>
+      <FontAwesomeIcon icon={faDollarSign} className="balance-icon" />
+      <span className="balance-text">
+        {isLoading ? 'Loading...' : formattedBalance}
+      </span>
     </span>
   );
 };
