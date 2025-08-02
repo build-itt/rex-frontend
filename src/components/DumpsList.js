@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dataService, paymentService } from '../services/api';
+import { paymentService } from '../services/api';
 import { useBalanceContext } from '../context/BalanceContext';
 import "./BankList.css";
 
@@ -17,14 +17,7 @@ const DumpsList = ({ banks }) => {
   const navigate = useNavigate();
   const { updateBalanceAfterTransaction } = useBalanceContext();
 
-  // Initialize filtered banks when component mounts or banks changes
-  useEffect(() => {
-    setFilteredDumps(banks);
-    // Update dropdown options when selected tag changes
-    updateDropdownOptions();
-  }, [banks, selectedTag]);
-
-  const updateDropdownOptions = () => {
+  const updateDropdownOptions = useCallback(() => {
     if (!banks || !banks.length) return;
     
     // Get unique values for the selected tag
@@ -34,7 +27,14 @@ const DumpsList = ({ banks }) => {
     )];
     
     setDropdownOptions(options);
-  };
+  }, [banks, selectedTag]);
+
+  // Initialize filtered banks when component mounts or banks changes
+  useEffect(() => {
+    setFilteredDumps(banks);
+    // Update dropdown options when selected tag changes
+    updateDropdownOptions();
+  }, [banks, selectedTag, updateDropdownOptions]);
 
   // Memoize the filterData function to prevent unnecessary recreations
   const filterData = useCallback((filters) => {
@@ -141,6 +141,48 @@ const DumpsList = ({ banks }) => {
     return <span className="table-typing currency-value">${numValue}</span>;
   };
 
+  // Function to render mobile card for each dump
+  const renderMobileCard = (dump, index) => {
+    const cardClass = `mobile-card ${loadingDumpId === dump.id ? 'loading' : ''}`;
+    
+    return (
+      <div key={dump.id} className={cardClass}>
+        <div className="mobile-card-header">
+          <div className="mobile-card-title">
+            Dump #{dump.id}
+          </div>
+          <div className="mobile-card-price">
+            {renderCurrency(dump.price)}
+          </div>
+        </div>
+        
+        <div className="mobile-card-content">
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">Balance:</span>
+            <span className="mobile-card-value">{renderCurrency(dump.balance)}</span>
+          </div>
+          
+          {dump.Info && (
+            <div className="mobile-card-info">
+              {dump.Info}
+            </div>
+          )}
+        </div>
+        
+        <div className="mobile-card-footer">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loadingDumpId === dump.id}
+            onClick={(event) => handleBuy(dump.id, event)}
+          >
+            {loadingDumpId === dump.id ? <div className="loader"></div> : 'Buy'}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Determine which columns to show based on screen width
   const priorityColumns = [
     { name: 'Balance', field: 'balance', show: true, isCurrency: true },
@@ -215,7 +257,7 @@ const DumpsList = ({ banks }) => {
         </div>
       </div>
 
-      {/* Responsive table with fixed Buy column */}
+      {/* Responsive table with fixed Buy column - Desktop */}
       <div className="bank-table-container">
         <table className="bank-table">
           <thead>
@@ -264,6 +306,21 @@ const DumpsList = ({ banks }) => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Cards Layout */}
+      <div className="mobile-cards-container">
+        {filteredDumps.length === 0 ? (
+          <div className="mobile-card">
+            <div className="mobile-card-content">
+              <div style={{ textAlign: 'center', color: '#6c6c6c', fontStyle: 'italic', padding: '20px' }}>
+                No dumps found matching your search criteria
+              </div>
+            </div>
+          </div>
+        ) : (
+          filteredDumps.map((dump, index) => renderMobileCard(dump, index))
+        )}
       </div>
     </div>
   );

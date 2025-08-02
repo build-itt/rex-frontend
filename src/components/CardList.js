@@ -17,14 +17,7 @@ const CardList = ({ banks }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownOptions, setDropdownOptions] = useState([]);
 
-  // Initialize filtered banks when component mounts or banks changes
-  useEffect(() => {
-    setFilteredBanks(banks);
-    // Update dropdown options when selected tag changes
-    updateDropdownOptions();
-  }, [banks, selectedTag]);
-
-  const updateDropdownOptions = () => {
+  const updateDropdownOptions = useCallback(() => {
     if (!banks || !banks.length) return;
     
     // Get unique values for the selected tag
@@ -34,7 +27,14 @@ const CardList = ({ banks }) => {
     )];
     
     setDropdownOptions(options);
-  };
+  }, [banks, selectedTag]);
+
+  // Initialize filtered banks when component mounts or banks changes
+  useEffect(() => {
+    setFilteredBanks(banks);
+    // Update dropdown options when selected tag changes
+    updateDropdownOptions();
+  }, [banks, selectedTag, updateDropdownOptions]);
 
   // Memoize the filterData function to prevent unnecessary recreations
   const filterData = useCallback((filters) => {
@@ -141,6 +141,73 @@ const CardList = ({ banks }) => {
     return <span className="table-typing currency-value">${numValue}</span>;
   };
 
+  // Function to render mobile card for each card
+  const renderMobileCard = (card, index) => {
+    const cardClass = `mobile-card ${loadingBankId === card.id ? 'loading' : ''}`;
+    
+    return (
+      <div key={card.id} className={cardClass}>
+        <div className="mobile-card-header">
+          <div className="mobile-card-title">
+            {card.type || 'Credit Card'}
+          </div>
+          <div className="mobile-card-price">
+            {renderCurrency(card.price)}
+          </div>
+        </div>
+        
+        <div className="mobile-card-content">
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">Type:</span>
+            <span className="mobile-card-value">{card.type || '-'}</span>
+          </div>
+          
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">Exp:</span>
+            <span className="mobile-card-value">{card.exp || '-'}</span>
+          </div>
+          
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">Bank:</span>
+            <span className="mobile-card-value">{card.bank || '-'}</span>
+          </div>
+          
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">Country:</span>
+            <span className="mobile-card-value">{card.country || '-'}</span>
+          </div>
+          
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">State:</span>
+            <span className="mobile-card-value">{card.state || '-'}</span>
+          </div>
+          
+          <div className="mobile-card-row">
+            <span className="mobile-card-label">Zip:</span>
+            <span className="mobile-card-value">{card.zip || '-'}</span>
+          </div>
+          
+          {card.Info && (
+            <div className="mobile-card-info">
+              {card.Info}
+            </div>
+          )}
+        </div>
+        
+        <div className="mobile-card-footer">
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={loadingBankId === card.id}
+            onClick={(event) => handleBuy(card.id, event)}
+          >
+            {loadingBankId === card.id ? <div className="loader"></div> : 'Buy'}
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   // Determine which columns to show based on screen width
   const priorityColumns = [
     { name: 'Type', field: 'type', show: true },
@@ -220,7 +287,7 @@ const CardList = ({ banks }) => {
         </div>
       </div>
 
-      {/* Responsive table with fixed Buy column */}
+      {/* Responsive table with fixed Buy column - Desktop */}
       <div className="bank-table-container">
         <table className="bank-table">
           <thead>
@@ -275,6 +342,21 @@ const CardList = ({ banks }) => {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Cards Layout */}
+      <div className="mobile-cards-container">
+        {filteredBanks.length === 0 ? (
+          <div className="mobile-card">
+            <div className="mobile-card-content">
+              <div style={{ textAlign: 'center', color: '#6c6c6c', fontStyle: 'italic', padding: '20px' }}>
+                No cards found matching your search criteria
+              </div>
+            </div>
+          </div>
+        ) : (
+          filteredBanks.map((card, index) => renderMobileCard(card, index))
+        )}
       </div>
     </div>
   );

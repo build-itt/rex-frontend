@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, Suspense, lazy } from 'react';
+import React, { useState, useEffect, forwardRef, Suspense, lazy, useMemo, useCallback } from 'react';
 import axios from 'axios'; // If you plan to make additional API calls
 import './Sidebar.css';
 import CashoutModal from './CashoutModal';
@@ -23,10 +23,9 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
         const response = await axios.get('https://rex-backend.vercel.app/store/categories/');
         const banks = response.data;
 
-        // Group banks by location
+        // Group banks by location - optimized without console.log
         const groupedBanks = banks.reduce((acc, bank) => {
           const { location } = bank;
-          console.log('Processing bank:', bank.name, 'with location:', location); // Debug log
           
           // Handle empty, null, or undefined locations
           const normalizedLocation = location && location.trim() ? location.trim() : 'Other';
@@ -37,8 +36,6 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           acc[normalizedLocation].push(bank);
           return acc;
         }, {});
-        
-        console.log('Final grouped banks:', groupedBanks); // Debug log
 
         setBanksByLocation(groupedBanks);
       } catch (error) {
@@ -49,22 +46,23 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
     fetchBanks();
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('balance'); // Clear balance on logout
     navigate('/signin');
-  };
+  }, [navigate]);
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  const toggleModal = useCallback(() => {
+    setIsModalOpen(prev => !prev);
     if (copySuccess) setCopySuccess(false);
-  };
-  const toggleCashoutModal = () => {
-    setIsCashoutModalOpen(!isCashoutModalOpen);
-  };
+  }, [copySuccess]);
   
-  const handleAddBalance = async () => {
+  const toggleCashoutModal = useCallback(() => {
+    setIsCashoutModalOpen(prev => !prev);
+  }, []);
+  
+  const handleAddBalance = useCallback(async () => {
     setIsLoading(true); // Set loading state to true
     try {
       const response = await axios.get('https://rex-backend.vercel.app/pay/add/', { headers: { Authorization: `Token ${token}` } });
@@ -75,12 +73,12 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
     } finally {
       setIsLoading(false); // Set loading state to false
     }
-  };
+  }, [token]);
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     handleAddBalance();
     toggleModal();
-  };
+  }, [handleAddBalance, toggleModal]);
 
   // Define the lazy-loaded button component inline
   const LazyBalanceButton = lazy(() => import('./SidebarBalance'));
@@ -89,22 +87,22 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
   const [liquidGlassOpen, setLiquidGlassOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const handleDropdownClick = (location) => {
+  const handleDropdownClick = useCallback((location) => {
     setSelectedLocation(location);
     setLiquidGlassOpen(true);
-  };
+  }, []);
 
-  const closeLiquidGlass = () => {
+  const closeLiquidGlass = useCallback(() => {
     setLiquidGlassOpen(false);
     setTimeout(() => setSelectedLocation(null), 400); // Delay to allow animation
-  };
+  }, []);
 
-  const handleBankSelect = (bankSlug) => {
+  const handleBankSelect = useCallback((bankSlug) => {
     closeLiquidGlass();
     navigate(`/banks/${bankSlug}`);
-  };
+  }, [closeLiquidGlass, navigate]);
 
-  const copyToClipboard = () => {
+  const copyToClipboard = useCallback(() => {
     navigator.clipboard.writeText(bitcoinAddress)
       .then(() => {
         setCopySuccess(true);
@@ -113,7 +111,15 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
       .catch(err => {
         console.error('Failed to copy address: ', err);
       });
-  };
+  }, [bitcoinAddress]);
+
+  // Memoize filtered locations to prevent expensive filtering on every render
+  const filteredLocations = useMemo(() => {
+    return Object.keys(banksByLocation).filter(location => {
+      const lowercaseLocation = location.toLowerCase().trim();
+      return lowercaseLocation !== 'other' && lowercaseLocation !== '';
+    });
+  }, [banksByLocation]);
 
   return (
     <>
@@ -138,24 +144,15 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
           </li>
           */}
           {/* Render Banks by Location, filtering out 'Other' */}
-          {Object.keys(banksByLocation)
-            .filter(location => {
-              console.log('Checking location for filtering:', location, 'lowercase:', location.toLowerCase()); // Debug log
-              const lowercaseLocation = location.toLowerCase().trim();
-              return lowercaseLocation !== 'other' && lowercaseLocation !== '';
-            }) // Filter out 'other' and empty locations case-insensitively
-            .map(location => {
-              console.log('Rendering location:', location); // Debug log
-              return (
-              <li
-                key={location}
-                className="menu-item dropdown"
-                onClick={() => handleDropdownClick(location)}
-              >
-                <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={faChevronDown} />
-              </li>
-            );
-          })}
+          {filteredLocations.map(location => (
+            <li
+              key={location}
+              className="menu-item dropdown"
+              onClick={() => handleDropdownClick(location)}
+            >
+              <FontAwesomeIcon icon={faBank} /> {location} Banks <FontAwesomeIcon icon={faChevronDown} />
+            </li>
+          ))}
         </ul>
 
         <div className='topbar-element'>
@@ -197,7 +194,6 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
             </div>
             
             <div className="liquid-glass-content">
-              {console.log('Modal rendering for location:', selectedLocation, 'banks:', banksByLocation[selectedLocation])} {/* Debug log */}
               {banksByLocation[selectedLocation] && banksByLocation[selectedLocation].length > 0 ? (
                 banksByLocation[selectedLocation].map(bank => (
                 <div
