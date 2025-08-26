@@ -161,7 +161,7 @@ const Sidebar = forwardRef(({ sidebarOpen, handleCloseClick }, ref) => {
               <FontAwesomeIcon icon={faHistory} /> History
             </li>
             <li className="menu-item">
-              <a href="https://t.me/DarkPasssupport/" target="_blank" rel="noopener noreferrer">
+              <a href="https://t.me/darkpasshelp/" target="_blank" rel="noopener noreferrer">
                 <FontAwesomeIcon icon={faHeadset} /> Support
               </a>
             </li>
